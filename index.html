@@ -163,7 +163,13 @@
   .ceremony .tag{font-family:'JetBrains Mono'; font-size:12px; color:var(--gold); letter-spacing:.16em; text-transform:uppercase; margin-bottom:22px;}
   .badge-wrap{display:flex; flex-direction:column; align-items:center; gap:20px; margin-bottom:36px; position:relative; z-index:2;}
   .badge-medal{width:220px; height:220px; display:flex; align-items:center; justify-content:center; position:relative;}
-  .badge-medal img{width:100%; height:100%; object-fit:cover; -webkit-mask-image:radial-gradient(circle, black 58%, transparent 76%); mask-image:radial-gradient(circle, black 58%, transparent 76%);}
+  .badge-medal img{width:100%; height:100%; object-fit:cover; -webkit-mask-image:radial-gradient(circle, black 58%, transparent 76%); mask-image:radial-gradient(circle, black 58%, transparent 76%); transition:filter .5s ease;}
+  .badge-medal.locked img{filter:grayscale(1) brightness(.35);}
+  .badge-medal .lock-overlay{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .4s ease; pointer-events:none;}
+  .badge-medal .lock-overlay svg{width:38px; height:38px; opacity:.85;}
+  .badge-medal.locked .lock-overlay{opacity:1;}
+  .badge-medal.unlocked{animation:badgePop .7s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes badgePop{0%{transform:scale(.72);} 55%{transform:scale(1.1);} 100%{transform:scale(1);}}
   .badge-medal .ring{position:absolute; inset:6px; border-radius:50%; border:1px dashed rgba(200,154,72,0.35); animation:spin 26s linear infinite; pointer-events:none;}
   @keyframes spin{to{transform:rotate(360deg);}}
   .ceremony h2{font-family:'Oswald'; font-weight:600; font-size:clamp(24px,3.4vw,34px); margin:0 0 12px;}
@@ -192,7 +198,20 @@
   .signed-text .t1{font-family:'Oswald'; font-weight:600; font-size:19px; color:var(--off-white);}
   .signed-text .t2{font-family:'JetBrains Mono'; font-size:11.5px; color:rgba(255,251,245,0.5); margin-top:3px;}
   .signed-msg{max-width:460px; font-size:13.5px; line-height:1.8; color:rgba(255,251,245,0.68); margin:0;}
-  .claim-btn{margin-top:8px; background:linear-gradient(90deg,var(--gold),#e0bd72); color:#241a08; border:none; padding:13px 26px; border-radius:26px; font-size:13.5px; font-weight:600; letter-spacing:.02em; cursor:pointer; font-family:'Noto Sans SC';}
+  .claim-btn{margin-top:8px; background:linear-gradient(90deg,var(--gold),#e0bd72); color:#241a08; border:none; padding:13px 26px; border-radius:26px; font-size:13.5px; font-weight:600; letter-spacing:.02em; cursor:pointer; font-family:'Noto Sans SC'; text-decoration:none; display:inline-flex; align-items:center; justify-content:center;}
+
+  .claim-form{display:none; max-width:520px; margin:32px auto 0; text-align:left; background:rgba(255,251,245,0.04); border:1px solid var(--line-light); border-radius:8px; padding:24px 26px 26px; position:relative; z-index:2;}
+  .claim-form.show{display:block; animation:riseIn .5s ease both;}
+  .claim-form p{font-size:13.5px; line-height:1.8; color:rgba(255,251,245,0.7); margin:0 0 14px;}
+  .claim-input-row{display:flex; gap:10px; flex-wrap:wrap;}
+  .claim-input-row input{flex:1; min-width:200px; padding:13px 15px; border-radius:6px; border:1px solid var(--line-light); background:rgba(255,251,245,0.06); color:var(--off-white); font-size:13.5px; font-family:inherit;}
+  .claim-input-row input::placeholder{color:rgba(255,251,245,0.35);}
+  .claim-input-row input.shake{animation:shakeX .4s ease; border-color:var(--rust);}
+
+  .result-card{display:none; max-width:480px; margin:34px auto 0; position:relative; z-index:2;}
+  .result-card.show{display:block; animation:riseIn .5s ease both;}
+  .result-card canvas{width:100%; height:auto; border-radius:10px; border:1px solid var(--line-light); display:block; margin-bottom:18px;}
+  .result-note{font-size:12.5px; color:rgba(255,251,245,.55); margin:14px 0 0; line-height:1.7;}
 
   .particles{position:absolute; inset:0; pointer-events:none; z-index:1;}
   .particle{position:absolute; width:5px; height:5px; background:var(--orange); border-radius:1px; opacity:0; top:50%; left:50%;}
@@ -451,17 +470,20 @@
 
   <div class="tag">行动契约 · ACTION COVENANT</div>
   <div class="badge-wrap">
-    <div class="badge-medal">
+    <div class="badge-medal locked" id="badgeMedal">
       <div class="ring"></div>
-      <img src="跑跑认证司导勋章.jpg" alt="跑跑认证司导 勋章">
+      <img id="badgeImg" src="跑跑认证司导勋章.jpg" alt="跑跑认证司导 勋章" crossorigin="anonymous">
+      <div class="lock-overlay" id="lockOverlay">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="10" rx="2" stroke="#F6EEDF" stroke-width="1.6"/><path d="M8 10V7a4 4 0 018 0v3" stroke="#F6EEDF" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </div>
     </div>
     <div>
-      <h2>凡阅读，即视为承诺</h2>
-      <p class="desc">凡点击本手册链接阅读的伙伴，即视为已完全理解并自愿遵守上述各项规则。感谢每一位伙伴的专业与配合，咱们一起把服务做好！</p>
+      <h2 id="ceremonyTitle">滑动确认，解锁你的专属勋章</h2>
+      <p class="desc" id="ceremonyDesc">凡点击本手册链接阅读的伙伴，即视为已完全理解并自愿遵守上述各项规则。滑动确认后，专属身份勋章即刻解锁。</p>
     </div>
   </div>
 
-  <div class="oath-box">
+  <div class="oath-box" id="oathBox">
     <div class="oath-title">确认遵守</div>
     <p>我已阅读并理解高效沟通、结算时间原则（含直客 / 同行结算周期差异）与争议处理规则，愿意以"跑跑认证司导"的标准对待每一位客人、每一趟行程。</p>
 
@@ -482,8 +504,21 @@
         <div class="t2" id="signTime">SIGNED AT --</div>
       </div>
     </div>
-    <p class="signed-msg">🏆 恭喜你，正式加入跑跑大家庭！你已完整阅读并确认了《跑跑司导行动契约》。作为一名专业的"跑跑英雄"，我们为你准备了专属的身份勋章。</p>
-    <button class="claim-btn" onclick="return false;">领取「跑跑认证司导」电子勋章</button>
+  </div>
+
+  <div class="claim-form" id="claimForm">
+    <div class="oath-title">领取专属勋章</div>
+    <p>请输入你的快帮行伙伴账户名，生成专属勋章图片后下载，交付给快帮行管理员完成备案。</p>
+    <div class="claim-input-row">
+      <input type="text" id="partnerName" placeholder="请输入快帮行伙伴账户名">
+      <button class="claim-btn" id="genBtn" onclick="generateBadge()">生成我的勋章</button>
+    </div>
+  </div>
+
+  <div class="result-card" id="resultCard">
+    <canvas id="badgeCanvas"></canvas>
+    <a class="claim-btn" id="downloadLink" download="跑跑认证司导勋章.png">下载勋章图片</a>
+    <p class="result-note">请将下载的图片发送给快帮行管理员，完成认证备案。</p>
   </div>
 
   <div class="particles" id="particles"></div>
@@ -554,7 +589,75 @@ function openMod(id){
     signTime.textContent = 'SIGNED AT ' + y+'-'+mo+'-'+d+' '+hh+':'+mm;
     signedState.classList.add('show');
     burst();
+
+    var badge = document.getElementById('badgeMedal');
+    badge.classList.remove('locked');
+    badge.classList.add('unlocked');
+    document.getElementById('ceremonyTitle').textContent = '太棒了，勋章已解锁！';
+    document.getElementById('ceremonyDesc').textContent = '你已正式加入跑跑大家庭。输入你的快帮行伙伴账户名，生成属于你的专属勋章。';
+
+    setTimeout(function(){
+      document.getElementById('claimForm').classList.add('show');
+      document.getElementById('claimForm').scrollIntoView({behavior:'smooth', block:'center'});
+    }, 550);
   }
+
+  window.generateBadge = function(){
+    var nameInput = document.getElementById('partnerName');
+    var name = nameInput.value.trim();
+    if(!name){
+      nameInput.classList.remove('shake'); void nameInput.offsetWidth; nameInput.classList.add('shake');
+      nameInput.focus();
+      return;
+    }
+    var img = document.getElementById('badgeImg');
+    var canvas = document.getElementById('badgeCanvas');
+    var ctx = canvas.getContext('2d');
+    var W = 1024, H = 660;
+    canvas.width = W; canvas.height = H;
+
+    function draw(){
+      ctx.fillStyle = '#0A121B';
+      ctx.fillRect(0,0,W,H);
+      var iw = img.naturalWidth || 1024, ih = img.naturalHeight || 559;
+      var scale = Math.min(W/iw, (H-110)/ih);
+      var dw = iw*scale, dh = ih*scale;
+      var dx = (W-dw)/2, dy = 20;
+      try{ ctx.drawImage(img, dx, dy, dw, dh); }catch(e){}
+
+      ctx.fillStyle = 'rgba(200,154,72,0.14)';
+      ctx.fillRect(0, H-100, W, 100);
+      ctx.strokeStyle = '#C89A48';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(0,H-100); ctx.lineTo(W,H-100); ctx.stroke();
+
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#F6EEDF';
+      ctx.font = '600 32px "Microsoft YaHei", sans-serif';
+      ctx.fillText('跑跑认证司导 · ' + name, W/2, H-56);
+
+      var now = new Date();
+      function pad(n){ return String(n).padStart(2,'0'); }
+      var ts = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate())+' '+pad(now.getHours())+':'+pad(now.getMinutes());
+      ctx.font = '400 16px monospace';
+      ctx.fillStyle = 'rgba(246,238,223,0.55)';
+      ctx.fillText('CERTIFIED AT ' + ts, W/2, H-24);
+
+      try{
+        var dataUrl = canvas.toDataURL('image/png');
+        var link = document.getElementById('downloadLink');
+        link.href = dataUrl;
+        link.download = '跑跑认证司导勋章-' + name + '.png';
+        document.getElementById('resultCard').classList.add('show');
+        document.getElementById('resultCard').scrollIntoView({behavior:'smooth', block:'center'});
+      }catch(err){
+        alert('图片生成失败，请截图当前页面后交付快帮行管理员。');
+      }
+    }
+
+    if(img.complete && img.naturalWidth){ draw(); }
+    else{ img.onload = draw; }
+  };
 
   function burst(){
     for(var i=0;i<26;i++){
