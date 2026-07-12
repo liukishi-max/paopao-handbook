@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>司导卡生成器</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   :root{
@@ -80,47 +82,21 @@
   }
   .upload-btn input{ display:none; }
 
-  .bg-options{
-    display:flex;
-    gap:8px;
-    margin-bottom:10px;
-  }
-  .bg-option{
-    flex:1;
-    text-align:center;
-    padding:9px 4px;
-    border-radius:10px;
-    border:1.5px solid #ffd9bd;
-    font-size:12.5px;
-    font-weight:600;
-    color:#a05a2c;
-    background:#fffaf6;
-    cursor:pointer;
-    transition:.2s;
-  }
-  .bg-option.active{
-    background: linear-gradient(135deg, var(--orange), var(--orange-deep));
-    border-color:transparent;
-    color:#fff;
-  }
-  .opacity-row{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-top:10px;
-  }
-  .opacity-row span{
-    font-size:12px;
-    color:#a05a2c;
-    white-space:nowrap;
-    width:70px;
-  }
-  .opacity-row input[type="range"]{
-    flex:1;
-    accent-color: var(--orange-deep);
-  }
-
   /* ---------- 预览卡片 ---------- */
+  #exportWrap{
+    width:100%;
+    max-width:400px;
+    aspect-ratio: 9 / 17.5;
+    background: linear-gradient(160deg, #f6f6f8 0%, #ececf1 100%);
+    border-radius:24px;
+    padding:28px 18px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:22px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  }
   #card{
     width:100%;
     max-width:400px;
@@ -150,22 +126,6 @@
     border-radius:50%;
     z-index:0;
   }
-  .card-bg-img{
-    position:absolute;
-    top:0; left:0;
-    width:100%; height:100%;
-    object-fit:cover;
-    z-index:0;
-    pointer-events:none;
-    display:none;
-  }
-  .card-tint{
-    position:absolute;
-    inset:0;
-    background:linear-gradient(160deg, rgba(255,178,127,0.55) 0%, rgba(255,127,63,0.55) 45%, rgba(232,93,31,0.6) 100%);
-    z-index:0;
-    display:none;
-  }
   .logo{
     text-align:center;
     font-size:24px;
@@ -176,6 +136,17 @@
     text-shadow:0 2px 0 rgba(180,60,10,0.35), 0 6px 14px rgba(0,0,0,0.18);
     position:relative;
     z-index:2;
+  }
+  .logo-icon{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:center;
+    margin-bottom:6px;
+  }
+  .logo-icon svg, .logo-icon img{
+    width:120px;
+    height:auto;
   }
   .card-title{
     text-align:center;
@@ -206,13 +177,13 @@
     height:78px;
     border-radius:12px;
     overflow:hidden;
-    background:rgba(255,255,255,0.25);
+    background:rgba(255,255,255,0.85);
     flex-shrink:0;
     display:flex;
     align-items:center;
     justify-content:center;
     font-size:11px;
-    color:rgba(255,255,255,0.85);
+    color:#777;
     text-align:center;
   }
   .car-photo img{
@@ -226,14 +197,15 @@
     justify-content:center;
   }
   .info-item{
-    background:rgba(255,255,255,0.22);
+    background:rgba(255,255,255,0.92);
     border-radius:10px;
     padding:9px 12px;
     font-size:14px;
     font-weight:600;
     word-break:break-all;
+    color:#2b2b2b;
   }
-  .info-item .k{ opacity:.85; font-weight:500; }
+  .info-item .k{ opacity:.65; font-weight:500; color:#555; }
   .full-list .info-item{ margin-bottom:8px; }
   .full-list .info-item:last-child{ margin-bottom:0; }
 
@@ -249,27 +221,29 @@
   }
 
   /* ---------- 操作按钮 ---------- */
-  .actions{
+  .icon-actions{
     width:100%;
     max-width:400px;
     display:flex;
-    gap:12px;
+    justify-content:center;
+    gap:28px;
     margin-top:22px;
   }
-  .save-btn{
-    flex:1;
-    padding:14px;
+  .icon-btn{
+    width:56px;
+    height:56px;
+    border-radius:50%;
     border:none;
-    border-radius:14px;
-    background: linear-gradient(135deg, var(--orange), var(--orange-deep));
-    color:#fff;
-    font-size:15px;
-    font-weight:700;
-    letter-spacing:1px;
-    box-shadow:0 8px 20px rgba(230,90,20,0.35);
+    background: linear-gradient(135deg, rgba(255,127,63,0.15), rgba(232,93,31,0.15));
+    color: var(--orange-deep);
+    display:flex;
+    align-items:center;
+    justify-content:center;
     cursor:pointer;
+    box-shadow:0 6px 16px rgba(230,90,20,0.18);
   }
-  .save-btn:active{ transform:scale(0.97); }
+  .icon-btn svg{ width:24px; height:24px; }
+  .icon-btn:active{ transform:scale(0.94); }
 
   .hint{
     color:#b06a3a;
@@ -307,28 +281,15 @@
       <input id="inPhoto" type="file" accept="image/*">
     </label>
   </div>
-  <div class="field">
-    <label>卡片背景</label>
-    <div class="bg-options">
-      <div class="bg-option active" data-mode="gradient">默认渐变</div>
-      <div class="bg-option" data-mode="vehicle">车辆照片</div>
-      <div class="bg-option" data-mode="custom">自定义图片</div>
-    </div>
-    <label class="upload-btn" id="customBgBtn" style="display:none;">
-      🖼️ 点击上传背景图片
-      <input id="inBg" type="file" accept="image/*">
-    </label>
-    <div class="opacity-row" id="opacityRow" style="display:none;">
-      <span>背景透明度</span>
-      <input id="inOpacity" type="range" min="10" max="90" value="35">
-    </div>
-  </div>
+
 </div>
 
 <!-- 预览 / 生成图片区域 -->
+<div id="exportWrap">
 <div id="card">
-  <img class="card-bg-img" id="cardBgImg" alt="">
-  <div class="card-tint" id="cardTint"></div>
+  <div class="logo-icon">
+    <img src="data:image/png;base64,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" alt="logo" style="display:block;margin:0 auto;">
+  </div>
   <div class="card-title" style="margin-top:6px;">您的专业司导服务前致意</div>
 
   <div class="info-panel">
@@ -350,10 +311,27 @@
   </div>
 </div>
 
-<div class="actions">
-  <button class="save-btn" id="saveBtn">💾 保存为图片</button>
+<div class="icon-actions">
+  <button class="icon-btn" id="shareBtn" title="分享">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="18" cy="5" r="3" stroke="currentColor" stroke-width="2"/>
+      <circle cx="6" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+      <circle cx="18" cy="19" r="3" stroke="currentColor" stroke-width="2"/>
+      <line x1="8.6" y1="10.6" x2="15.4" y2="6.4" stroke="currentColor" stroke-width="2"/>
+      <line x1="8.6" y1="13.4" x2="15.4" y2="17.6" stroke="currentColor" stroke-width="2"/>
+    </svg>
+  </button>
+  <button class="icon-btn" id="saveBtn" title="下载">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 3v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M4 19h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </button>
 </div>
-<div class="hint">生成后长按图片可保存到相册</div>
+<div class="hint">下载直接发送给服务群</div>
+</div>
+
 
 <script>
   const inName = document.getElementById('inName');
@@ -361,8 +339,6 @@
   const inModel = document.getElementById('inModel');
   const inPlate = document.getElementById('inPlate');
   const inPhoto = document.getElementById('inPhoto');
-  const inBg = document.getElementById('inBg');
-  const inOpacity = document.getElementById('inOpacity');
 
   const pvName = document.getElementById('pvName');
   const pvPhone = document.getElementById('pvPhone');
@@ -370,16 +346,9 @@
   const pvPlate = document.getElementById('pvPlate');
   const photoBox = document.getElementById('photoBox');
 
-  const card = document.getElementById('card');
-  const cardBgImg = document.getElementById('cardBgImg');
-  const cardTint = document.getElementById('cardTint');
-  const bgOptions = document.querySelectorAll('.bg-option');
-  const customBgBtn = document.getElementById('customBgBtn');
-  const opacityRow = document.getElementById('opacityRow');
+  const card = document.getElementById('exportWrap');
 
-  let bgMode = 'gradient';
   let vehiclePhotoData = '';
-  let customBgData = '';
 
   inName.addEventListener('input', () => {
     pvName.textContent = inName.value.trim() || '李明';
@@ -401,56 +370,9 @@
     reader.onload = (evt) => {
       vehiclePhotoData = evt.target.result;
       photoBox.innerHTML = `<img src="${vehiclePhotoData}" alt="车辆照片">`;
-      if (bgMode === 'vehicle') updateBackground();
     };
     reader.readAsDataURL(file);
   });
-
-  inBg.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (evt) => {
-      customBgData = evt.target.result;
-      if (bgMode === 'custom') updateBackground();
-    };
-    reader.readAsDataURL(file);
-  });
-
-  inOpacity.addEventListener('input', updateBackground);
-
-  bgOptions.forEach(opt => {
-    opt.addEventListener('click', () => {
-      bgOptions.forEach(o => o.classList.remove('active'));
-      opt.classList.add('active');
-      bgMode = opt.dataset.mode;
-      customBgBtn.style.display = bgMode === 'custom' ? 'flex' : 'none';
-      opacityRow.style.display = bgMode === 'gradient' ? 'none' : 'flex';
-      updateBackground();
-    });
-  });
-
-  function updateBackground(){
-    const opacity = inOpacity.value / 100;
-    if (bgMode === 'gradient') {
-      cardBgImg.style.display = 'none';
-      cardTint.style.display = 'none';
-      card.style.background = 'linear-gradient(160deg, var(--orange-light) 0%, var(--orange) 45%, var(--orange-deep) 100%)';
-      return;
-    }
-    const src = bgMode === 'vehicle' ? vehiclePhotoData : customBgData;
-    if (!src) {
-      cardBgImg.style.display = 'none';
-      cardTint.style.display = 'none';
-      card.style.background = 'linear-gradient(160deg, var(--orange-light) 0%, var(--orange) 45%, var(--orange-deep) 100%)';
-      return;
-    }
-    card.style.background = '#d9613a';
-    cardBgImg.src = src;
-    cardBgImg.style.display = 'block';
-    cardBgImg.style.opacity = opacity;
-    cardTint.style.display = 'block';
-  }
 
   document.getElementById('saveBtn').addEventListener('click', () => {
     html2canvas(card, {
@@ -462,6 +384,28 @@
       link.download = '司导卡.png';
       link.href = canvas.toDataURL('image/png');
       link.click();
+    });
+  });
+
+  document.getElementById('shareBtn').addEventListener('click', () => {
+    html2canvas(card, {
+      scale: 3,
+      useCORS: true,
+      backgroundColor: null
+    }).then(canvas => {
+      canvas.toBlob(async (blob) => {
+        const file = new File([blob], '司导卡.png', { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({ files: [file], title: '司导卡' });
+          } catch (err) { /* 用户取消分享，忽略 */ }
+        } else {
+          const link = document.createElement('a');
+          link.download = '司导卡.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        }
+      });
     });
   });
 </script>
