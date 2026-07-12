@@ -111,12 +111,13 @@
     font-size:17px;
     font-weight:700;
     margin-top:4px;
-    margin-bottom:26px;
+    margin-bottom:32px;
     opacity:.95;
     position:relative;
     z-index:2;
     letter-spacing:0.5px;
     line-height:1.5;
+    max-width:100%;
   }
   .info-panel{
     background:rgba(255,255,255,0.16);
@@ -163,7 +164,7 @@
   .info-item .k{ opacity:.65; font-weight:500; color:#555; }
 
   .footer-note{
-    margin-top:26px;
+    margin-top:36px;
     background:rgba(255,255,255,0.14);
     border-radius:14px;
     padding:16px 18px;
@@ -172,6 +173,7 @@
     line-height:1.7;
     position:relative;
     z-index:2;
+    text-align:left;
   }
 
   /* ---------- 操作按钮 ---------- */
@@ -224,7 +226,7 @@
     background:rgba(255,255,255,0.24);
     box-shadow:0 0 0 2px rgba(255,255,255,0.55);
   }
-  .card-title.editable{ display:inline-block; }
+  .card-title{ display:block; width:fit-content; max-width:100%; margin-left:auto; margin-right:auto; }
   .photo-editable{
     position:relative;
     cursor:pointer;
@@ -284,7 +286,7 @@
   <div class="logo-icon">
     <img src="data:image/png;base64,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" alt="logo" style="display:block;margin:0 auto;">
   </div>
-  <div class="card-title editable" id="cardTitle" contenteditable="true" spellcheck="false">您的专业司导服务前致意</div>
+  <div class="card-title" id="cardTitle">您的专业司导服务前致意</div>
 
   <div class="info-panel">
     <div class="car-photo-banner photo-editable" id="photoBox" title="点击更换车辆照片"><svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
@@ -331,7 +333,7 @@
     </div>
   </div>
 
-  <div class="footer-note editable" id="footerNote" contenteditable="true" spellcheck="false">
+  <div class="footer-note" id="footerNote">
     感谢您选择我们的服务！我是您的司导，竭诚为您提供安全、舒适、高效的出行体验。
   </div>
 </div>
@@ -367,7 +369,6 @@
 
   // 单行可编辑字段：限制长度、屏蔽换行、点击时清空占位提示、失焦为空时恢复占位提示
   const singleLineFields = [
-    { el: cardTitle, maxLen: 30, fallback: '您的专业司导服务前致意', isPlaceholder: false },
     { el: pvName,    maxLen: 10, fallback: '请输入你的信息', isPlaceholder: true },
     { el: pvPhone,   maxLen: 20, fallback: '请输入你的信息', isPlaceholder: true },
     { el: pvPlate,   maxLen: 12, fallback: '请输入你的信息', isPlaceholder: true },
@@ -417,12 +418,7 @@
     });
   });
 
-  // 底部说明：多行文字，允许换行，仅在完全清空时恢复默认
-  footerNote.addEventListener('blur', () => {
-    if (!footerNote.textContent.trim()) {
-      footerNote.textContent = '感谢您选择我们的服务！我是您的司导，竭诚为您提供安全、舒适、高效的出行体验。';
-    }
-  });
+  // 底部说明文字已固定为不可编辑，无需监听变化
 
   // 点击车辆照片区域直接更换图片
   photoBox.addEventListener('click', () => {
@@ -440,13 +436,13 @@
     reader.readAsDataURL(file);
   });
 
-  function generateCardJpeg(callback){
+  function generateCardImage(callback){
     html2canvas(card, {
       scale: 3,
       useCORS: true,
-      backgroundColor: '#ffffff'
+      backgroundColor: null
     }).then(canvas => {
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+      const dataUrl = canvas.toDataURL('image/png');
       callback(dataUrl);
     });
   }
@@ -475,11 +471,11 @@
       document.activeElement.blur();
     }
     card.classList.add('capturing');
-    generateCardJpeg((dataUrl) => {
+    generateCardImage((dataUrl) => {
       card.classList.remove('capturing');
       try {
         const link = document.createElement('a');
-        link.download = '司导服务卡.jpg';
+        link.download = '司导服务卡.png';
         link.href = dataUrl;
         document.body.appendChild(link);
         link.click();
