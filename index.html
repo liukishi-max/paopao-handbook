@@ -496,7 +496,11 @@
 
   <div class="oath-box" id="oathBox">
     <div class="oath-title">确认遵守</div>
-    <p>我已阅读并理解高效沟通、结算时间原则（含直客 / 同行结算周期差异）与争议处理规则，愿意以"跑跑认证司导"的标准对待每一位客人、每一趟行程。</p>
+
+    <label class="mustread-ack final-ack" id="commAck">
+      <input type="checkbox" id="commCheck">
+      <span>我已阅读并理解<a href="#m1" onclick="openMod('m1');return false;">高效沟通</a>与<a href="#m3" onclick="openMod('m3');return false;">争议处理规则</a>，愿意以"跑跑认证司导"的标准对待每一位客人、每一趟行程</span>
+    </label>
 
     <label class="mustread-ack final-ack" id="finalAck">
       <input type="checkbox" id="ackCheck">
@@ -695,12 +699,14 @@ function openMod(id){
 
   function pointerDown(e){
     if(done) return;
+    var comm = document.getElementById('commCheck');
     var ack = document.getElementById('ackCheck');
-    if(ack && !ack.checked){
-      var fa = document.getElementById('finalAck');
+    if((comm && !comm.checked) || (ack && !ack.checked)){
+      var targetId = (comm && !comm.checked) ? 'commAck' : 'finalAck';
+      var fa = document.getElementById(targetId);
       fa.classList.remove('shake'); void fa.offsetWidth; fa.classList.add('shake');
       slider.classList.remove('shake'); void slider.offsetWidth; slider.classList.add('shake');
-      label.textContent = '请先勾选左上方的结算周期确认';
+      label.textContent = (comm && !comm.checked) ? '请先勾选上方的沟通与争议处理确认' : '请先勾选上方的结算周期确认';
       setTimeout(function(){ label.textContent = '向右滑动，确认遵守 →'; }, 2200);
       return;
     }
