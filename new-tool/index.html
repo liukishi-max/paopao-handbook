@@ -372,7 +372,7 @@
   const pvPlate = document.getElementById('pvPlate');
   const photoBox = document.getElementById('photoBox');
 
-  const card = document.getElementById('exportWrap');
+  const card = document.getElementById('card');
 
   let vehiclePhotoData = '';
 
@@ -411,12 +411,7 @@
     });
   }
 
-  function openSaveTab(dataUrl){
-    const win = window.open('', '_blank');
-    if (!win) {
-      alert('未能打开新页面，请允许弹出窗口后重试');
-      return;
-    }
+  function writeSaveTab(win, dataUrl){
     win.document.write(
       '<!DOCTYPE html><html><head><meta charset="UTF-8">' +
       '<meta name="viewport" content="width=device-width, initial-scale=1.0">' +
@@ -430,6 +425,7 @@
   }
 
   document.getElementById('saveBtn').addEventListener('click', () => {
+    const win = window.open('', '_blank');
     generateCardJpeg((dataUrl) => {
       try {
         const link = document.createElement('a');
@@ -439,7 +435,11 @@
         link.click();
         document.body.removeChild(link);
       } catch (err) { /* 部分浏览器不支持直接下载，走下方保存页兜底 */ }
-      openSaveTab(dataUrl);
+      if (win) {
+        writeSaveTab(win, dataUrl);
+      } else {
+        alert('未能打开新页面，请允许弹出窗口后重试');
+      }
     });
   });
 </script>
