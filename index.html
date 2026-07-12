@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>跑跑 · 快帮行司导赋能手册（2026 内部版）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --orange:#EB6A1E;
+    --orange-dim:#c95915;
+    --rust:#B33D12;
+    --ink:#1C1712;
+    --parchment:#F6EEDF;
+    --parchment-deep:#EDE0C8;
+    --gold:#C89A48;
+    --off-white:#FFFBF5;
+    --line:rgba(28,23,18,0.12);
+    --line-light:rgba(255,251,245,0.14);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0; background:var(--parchment); color:var(--ink); font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif; -webkit-font-smoothing:antialiased;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+
+  /* ---------- NAV ---------- */
+  header.nav{position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:0 clamp(20px,4vw,52px); height:66px; background:rgba(28,23,18,0.94); backdrop-filter:blur(6px); border-bottom:1px solid var(--line-light);}
+  .nav-brand{display:flex; align-items:center; gap:12px;}
+  .nav-mark svg{width:30px;height:30px;}
+  .nav-title{color:var(--off-white); font-family:'Oswald',sans-serif; font-weight:600; font-size:14.5px; letter-spacing:0.04em;}
+  .nav-title small{display:block; font-family:'Noto Sans SC'; font-weight:400; font-size:10.5px; color:rgba(255,251,245,0.55); letter-spacing:0.1em; margin-top:1px;}
+  .nav-links{display:flex; align-items:center; gap:2px;}
+  .nav-links a{color:rgba(255,251,245,0.68); text-decoration:none; font-size:13.5px; padding:9px 14px; border-radius:3px; position:relative; transition:color .2s ease; display:flex; align-items:center; gap:7px;}
+  .nav-links a .num{font-family:'JetBrains Mono'; font-size:10.5px; color:var(--orange); opacity:.85;}
+  .nav-links a:hover{color:var(--off-white);}
+  .nav-links a::after{content:''; position:absolute; left:14px; right:14px; bottom:5px; height:1.5px; background:var(--orange); transform:scaleX(0); transform-origin:left; transition:transform .25s ease;}
+  .nav-links a:hover::after{transform:scaleX(1);}
+  .nav-cta{background:var(--orange); color:var(--off-white); border:none; padding:9px 18px; font-size:13px; font-weight:500; border-radius:3px; cursor:pointer; letter-spacing:.02em; transition:background .2s ease;}
+  .nav-cta:hover{background:var(--orange-dim);}
+  @media (max-width:860px){ .nav-links{display:none;} }
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative; overflow:hidden; background:linear-gradient(180deg,var(--ink) 0%, #221A13 100%); padding:150px clamp(20px,6vw,80px) 70px; color:var(--off-white);}
+  .hero-slashes{position:absolute; inset:0; opacity:.5; pointer-events:none;}
+  .hero-slashes span{position:absolute; width:2px; background:linear-gradient(180deg,transparent,var(--orange),transparent); transform:rotate(-18deg);}
+  .hero-eyebrow{display:inline-flex; align-items:center; gap:9px; font-family:'JetBrains Mono'; font-size:12px; letter-spacing:.16em; color:var(--orange); text-transform:uppercase; margin-bottom:22px; position:relative; z-index:2;}
+  .hero-eyebrow::before{content:''; width:22px; height:1.5px; background:var(--orange); display:inline-block;}
+  .hero h1{font-family:'Oswald',sans-serif; font-weight:700; font-size:clamp(34px,5.6vw,64px); line-height:1.08; margin:0 0 18px; max-width:920px; position:relative; z-index:2;}
+  .hero h1 em{font-style:normal; color:var(--orange); transform:skewX(-6deg); display:inline-block;}
+  .hero p.lead{font-size:clamp(14.5px,1.4vw,16.5px); color:rgba(255,251,245,0.68); max-width:600px; line-height:1.75; margin:0; font-weight:300; position:relative; z-index:2;}
+
+  .hero-brain{position:absolute; right:-6%; top:50%; transform:translateY(-50%); width:min(50%,560px); height:auto; opacity:.85; pointer-events:none; z-index:1;}
+  @media(max-width:900px){ .hero-brain{opacity:.28; right:-15%;} }
+  .pulse-node{animation:nodePulse 3s ease-in-out infinite;}
+  @keyframes nodePulse{0%,100%{opacity:.35; r:2.6;} 50%{opacity:1; r:4.2;}}
+  .flow-line{stroke-dasharray:6 10; animation:dashFlow 3.4s linear infinite;}
+  @keyframes dashFlow{to{stroke-dashoffset:-160;}}
+  .brain-outline{animation:outlinePulse 5s ease-in-out infinite;}
+  @keyframes outlinePulse{0%,100%{opacity:.4;} 50%{opacity:.75;}}
+
+  /* ---------- COACH INTRO ---------- */
+  .coach{position:relative; z-index:2; margin:44px 0 0; max-width:640px; background:rgba(255,251,245,0.05); border:1px solid var(--line-light); border-radius:10px; padding:22px 26px; display:flex; gap:18px;}
+  .coach-avatar{width:44px;height:44px; border-radius:50%; background:linear-gradient(135deg,var(--orange),var(--rust)); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Oswald'; font-weight:600; color:var(--off-white); font-size:15px;}
+  .coach-name{font-family:'JetBrains Mono'; font-size:11px; letter-spacing:.08em; color:var(--gold); text-transform:uppercase; margin-bottom:6px;}
+  .coach p{margin:0; font-size:13.5px; line-height:1.8; color:rgba(255,251,245,0.75);}
+
+  /* ---------- SECTION LABEL ---------- */
+  .section-intro{max-width:1180px; margin:0 auto; padding:74px clamp(20px,6vw,80px) 10px;}
+  .section-intro .tag{font-family:'JetBrains Mono'; font-size:12px; color:var(--rust); letter-spacing:.14em; display:flex; align-items:center; gap:10px; margin-bottom:14px;}
+  .section-intro .tag::before{content:''; width:26px; height:1.5px; background:var(--rust);}
+  .section-intro h2{font-family:'Oswald'; font-weight:600; font-size:clamp(26px,3.4vw,36px); margin:0 0 10px;}
+  .section-intro p{color:rgba(28,23,18,.62); max-width:600px; line-height:1.7; font-size:14.5px; margin:0 0 22px;}
+  .keywords{display:flex; flex-wrap:wrap; gap:12px;}
+  .kw-pill{display:inline-flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; padding:10px 20px; min-width:132px; border-radius:22px; background:var(--orange); border:1px solid var(--orange); font-size:13.5px; color:var(--off-white); font-weight:600; letter-spacing:.01em; transition:background .2s ease, transform .2s ease, box-shadow .2s ease; box-shadow:0 4px 14px rgba(235,106,30,0.28);}
+  .kw-pill:hover{background:var(--orange-dim); border-color:var(--orange-dim); transform:translateY(-2px); box-shadow:0 6px 18px rgba(235,106,30,0.38);}
+  .kw-pill .kw-num{font-family:'JetBrains Mono'; font-size:10.5px; color:rgba(255,251,245,0.75);}
+
+  /* ---------- MODULES ---------- */
+  .modules{max-width:1180px; margin:0 auto; padding:30px clamp(20px,6vw,80px) 90px;}
+  .mod{border-top:1px solid var(--line);}
+  .mod:last-child{border-bottom:1px solid var(--line);}
+  .mod-head{display:flex; align-items:center; gap:24px; width:100%; background:none; border:none; cursor:pointer; text-align:left; padding:28px 4px; font-family:inherit; color:var(--ink);}
+  .mod-ico{width:38px;height:38px; flex-shrink:0; border-radius:9px; background:var(--parchment-deep); display:flex; align-items:center; justify-content:center;}
+  .mod-ico svg{width:19px;height:19px;}
+  .mod-head h3{font-family:'Oswald'; font-weight:600; font-size:clamp(18px,2.3vw,24px); margin:0; flex:1;}
+  .mod-head .sub{display:none;}
+  @media(min-width:720px){ .mod-head .sub{display:block; font-size:12.5px; color:rgba(28,23,18,.42); max-width:230px; font-weight:400;} }
+  .mod-num{font-family:'Oswald'; font-size:13px; color:var(--gold); flex-shrink:0;}
+  .mod-icon{width:28px; height:28px; flex-shrink:0; position:relative;}
+  .mod-icon::before, .mod-icon::after{content:''; position:absolute; background:var(--ink); transition:transform .3s ease, background .3s ease;}
+  .mod-icon::before{ left:5px; right:5px; top:50%; height:2px; transform:translateY(-50%); }
+  .mod-icon::after{ top:5px; bottom:5px; left:50%; width:2px; transform:translateX(-50%); }
+  .mod.open .mod-icon::after{transform:translateX(-50%) rotate(90deg); opacity:0;}
+  .mod.open .mod-icon::before{background:var(--orange);}
+  .mod.open .mod-ico{background:var(--orange);}
+  .mod.open .mod-ico svg path, .mod.open .mod-ico svg circle, .mod.open .mod-ico svg rect{stroke:var(--off-white);}
+
+  .mod-body{max-height:0; overflow:hidden; transition:max-height .45s cubic-bezier(.4,0,.2,1);}
+  .mod-body-inner{padding:0 4px 40px 62px; display:grid; grid-template-columns:1.1fr .9fr; gap:40px;}
+  @media(max-width:720px){.mod-body-inner{grid-template-columns:1fr; padding-left:4px;}}
+  .mod-body-inner p{line-height:1.85; font-size:14.5px; color:rgba(28,23,18,.75); margin:0 0 16px;}
+  .mod-body-inner ul{margin:0 0 16px; padding:0; list-style:none;}
+  .mod-body-inner li{display:flex; gap:11px; padding:11px 0; border-top:1px solid var(--line); font-size:14px; line-height:1.6;}
+  .mod-body-inner li:first-child{border-top:none;}
+  .mod-body-inner li b{color:var(--rust); font-weight:600; flex-shrink:0; white-space:nowrap;}
+  .quote-line{font-size:13.5px; background:var(--off-white); border-left:3px solid var(--orange); padding:12px 16px; margin:0 0 16px; color:rgba(28,23,18,.72); line-height:1.7; border-radius:0 4px 4px 0;}
+  .mod-panel{background:var(--off-white); border:1px solid var(--line); border-radius:6px; padding:22px 24px;}
+  .mod-panel .panel-title{font-family:'JetBrains Mono'; font-size:11px; letter-spacing:.1em; color:var(--gold); text-transform:uppercase; margin-bottom:14px;}
+  .mod-panel p{margin:0 0 12px;}
+  .mod-panel p:last-child{margin-bottom:0;}
+  .ph-link{display:inline-flex; align-items:center; gap:8px; margin-top:6px; padding:9px 14px; border:1px dashed var(--gold); border-radius:5px; font-size:12.5px; color:var(--rust); font-family:'JetBrains Mono'; text-decoration:none;}
+
+  /* 4-hour timeline */
+  .hour-row{display:flex; align-items:center; gap:10px; margin-bottom:6px;}
+  .hour-track{flex:1; height:8px; border-radius:5px; background:var(--parchment-deep); position:relative; overflow:hidden;}
+  .hour-track .buf{position:absolute; left:0; top:0; bottom:0; width:40%; background:linear-gradient(90deg,var(--rust),var(--orange));}
+  .hour-caps{display:flex; justify-content:space-between; font-family:'JetBrains Mono'; font-size:10.5px; color:rgba(28,23,18,.45); margin-top:6px;}
+
+  /* growth ladder */
+  .ladder{display:flex; flex-direction:column; gap:10px;}
+  .rung{display:flex; align-items:flex-start; gap:12px; padding:12px 0; border-top:1px solid var(--line);}
+  .rung:first-child{border-top:none;}
+  .rung .lv{font-family:'Oswald'; font-weight:600; font-size:13px; color:var(--off-white); background:var(--rust); border-radius:4px; padding:3px 8px; flex-shrink:0;}
+  .rung.l2 .lv{background:var(--orange);}
+  .rung.l3 .lv{background:var(--gold);}
+  .rung .desc{font-size:13px; line-height:1.6; color:rgba(28,23,18,.72);}
+  .rung .desc b{color:var(--ink);}
+
+  /* ---------- 必读：结算周期总览 ---------- */
+  .mustread{grid-column:1 / -1; margin-top:8px; background:var(--off-white); border:1px solid var(--line); border-radius:8px; padding:28px 26px 26px;}
+  .mustread-head{display:flex; align-items:center; gap:12px; margin-bottom:22px; flex-wrap:wrap;}
+  .mustread-tag{font-family:'JetBrains Mono'; font-size:10.5px; letter-spacing:.08em; color:var(--off-white); background:var(--rust); padding:4px 10px; border-radius:20px; text-transform:uppercase;}
+  .mustread-head h4{font-family:'Oswald'; font-weight:600; font-size:16px; margin:0; color:var(--ink);}
+  .weeks-head{display:grid; grid-template-columns:110px 1fr 1fr 1fr; gap:14px; margin-bottom:18px;}
+  .weeks-head span{font-family:'JetBrains Mono'; font-size:11.5px; color:rgba(28,23,18,.4); text-align:center;}
+  .weeks-head span:first-child{text-align:left;}
+  .wk-row{display:grid; grid-template-columns:110px 1fr 1fr 1fr; gap:14px; align-items:center; margin-bottom:14px;}
+  .wk-row:last-of-type{margin-bottom:0;}
+  .wk-row .rowlabel{font-family:'Oswald'; font-weight:600; font-size:13.5px;}
+  .wk-card{border-radius:7px; padding:12px 10px; text-align:center; position:relative;}
+  .wk-card .k{font-family:'Oswald'; font-weight:600; font-size:13px; margin-bottom:2px;}
+  .wk-card .v{font-size:11px;}
+  .wk-card.teal{background:#E6F3EF; border:1px solid #B7DED2;}
+  .wk-card.teal .k{color:#0F6E56;} .wk-card.teal .v{color:#0F6E56; opacity:.75;}
+  .wk-card.coral{background:#FBEBE3; border:1px solid #EAC1AC;}
+  .wk-card.coral .k{color:#993C1D;} .wk-card.coral .v{color:#993C1D; opacity:.8;}
+  .wk-card.empty{background:transparent; border:1px dashed var(--line);}
+  .mustread-note{font-size:13px; color:rgba(28,23,18,.6); line-height:1.7; margin:20px 0 20px; padding-top:16px; border-top:1px solid var(--line);}
+  .mustread-ack{display:flex; align-items:flex-start; gap:10px; cursor:pointer; user-select:none;}
+  .mustread-ack input{margin-top:2px; width:16px; height:16px; accent-color:var(--rust); flex-shrink:0; cursor:pointer;}
+  .mustread-ack span{font-size:13px; color:var(--ink); line-height:1.6;}
+  .mustread.shake{animation:shakeX .4s ease;}
+  @keyframes shakeX{0%,100%{transform:translateX(0);} 25%{transform:translateX(-6px);} 75%{transform:translateX(6px);}}
+  @media(max-width:640px){ .weeks-head, .wk-row{grid-template-columns:78px 1fr 1fr 1fr; gap:8px;} .wk-card{padding:9px 4px;} .wk-card .k{font-size:11.5px;} .wk-card .v{font-size:9.5px;} }
+
+  /* ---------- CEREMONY ---------- */
+  .ceremony{position:relative; background:radial-gradient(circle at 50% -10%, #10192a 0%, #0c1420 45%, var(--ink) 100%); padding:100px clamp(20px,6vw,80px) 110px; color:var(--off-white); text-align:center; overflow:hidden;}
+  .ceremony-slashes{position:absolute; inset:0; opacity:.3; pointer-events:none;}
+  .ceremony-slashes span{position:absolute; width:1.5px; background:linear-gradient(180deg,transparent,var(--gold),transparent); transform:rotate(-18deg);}
+  .ceremony .tag{font-family:'JetBrains Mono'; font-size:12px; color:var(--gold); letter-spacing:.16em; text-transform:uppercase; margin-bottom:22px;}
+  .badge-wrap{display:flex; flex-direction:column; align-items:center; gap:20px; margin-bottom:36px; position:relative; z-index:2;}
+  .badge-medal{width:220px; height:220px; display:flex; align-items:center; justify-content:center; position:relative;}
+  .badge-medal img{width:100%; height:100%; object-fit:cover; -webkit-mask-image:radial-gradient(circle, black 58%, transparent 76%); mask-image:radial-gradient(circle, black 58%, transparent 76%);}
+  .badge-medal .ring{position:absolute; inset:6px; border-radius:50%; border:1px dashed rgba(200,154,72,0.35); animation:spin 26s linear infinite; pointer-events:none;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .ceremony h2{font-family:'Oswald'; font-weight:600; font-size:clamp(24px,3.4vw,34px); margin:0 0 12px;}
+  .ceremony p.desc{color:rgba(255,251,245,0.58); max-width:480px; margin:0 auto; font-size:14px; line-height:1.75;}
+
+  .oath-box{max-width:560px; margin:36px auto 0; text-align:left; background:rgba(255,251,245,0.04); border:1px solid var(--line-light); border-radius:8px; padding:24px 26px 28px; position:relative; z-index:2;}
+  .oath-box .oath-title{font-family:'JetBrains Mono'; font-size:11px; letter-spacing:.1em; color:var(--gold); text-transform:uppercase; margin-bottom:12px;}
+  .oath-box p{font-size:13.5px; line-height:1.85; color:rgba(255,251,245,0.75); margin:0 0 22px;}
+
+  .slider{position:relative; height:56px; border-radius:28px; background:rgba(255,251,245,0.06); border:1px solid var(--line-light); overflow:hidden; user-select:none; touch-action:none;}
+  .slider-fill{position:absolute; inset:0; width:0; background:linear-gradient(90deg, var(--rust), var(--orange)); border-radius:28px; transition:width .05s linear;}
+  .slider-label{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:13.5px; letter-spacing:.06em; color:rgba(255,251,245,0.55); pointer-events:none; font-family:'JetBrains Mono';}
+  .slider-handle{position:absolute; top:3px; left:3px; width:50px; height:50px; border-radius:50%; background:var(--off-white); display:flex; align-items:center; justify-content:center; cursor:grab; box-shadow:0 4px 14px rgba(0,0,0,0.35); z-index:3; transition:left .05s linear;}
+  .slider-handle:active{cursor:grabbing;}
+  .slider-handle svg{width:20px;height:20px;}
+  .slider.done .slider-fill{width:100% !important;}
+
+  .signed-state{display:none; flex-direction:column; align-items:center; gap:18px; margin-top:40px; position:relative; z-index:2;}
+  .signed-state.show{display:flex; animation:riseIn .5s ease both;}
+  @keyframes riseIn{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+  .stamp-row{display:flex; align-items:center; gap:12px;}
+  .stamp{width:52px;height:52px; border:2px solid var(--gold); border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; animation:stampIn .5s cubic-bezier(.34,1.56,.64,1) both;}
+  @keyframes stampIn{0%{transform:scale(2.4) rotate(-14deg); opacity:0;} 100%{transform:scale(1) rotate(-14deg); opacity:1;}}
+  .stamp svg{width:24px;height:24px;}
+  .signed-text{text-align:left;}
+  .signed-text .t1{font-family:'Oswald'; font-weight:600; font-size:19px; color:var(--off-white);}
+  .signed-text .t2{font-family:'JetBrains Mono'; font-size:11.5px; color:rgba(255,251,245,0.5); margin-top:3px;}
+  .signed-msg{max-width:460px; font-size:13.5px; line-height:1.8; color:rgba(255,251,245,0.68); margin:0;}
+  .claim-btn{margin-top:8px; background:linear-gradient(90deg,var(--gold),#e0bd72); color:#241a08; border:none; padding:13px 26px; border-radius:26px; font-size:13.5px; font-weight:600; letter-spacing:.02em; cursor:pointer; font-family:'Noto Sans SC';}
+
+  .particles{position:absolute; inset:0; pointer-events:none; z-index:1;}
+  .particle{position:absolute; width:5px; height:5px; background:var(--orange); border-radius:1px; opacity:0; top:50%; left:50%;}
+  .particle.gold{background:var(--gold);}
+
+  footer{background:var(--ink); color:rgba(255,251,245,0.4); text-align:center; padding:26px 20px; font-size:12px; font-family:'JetBrains Mono'; letter-spacing:.04em; border-top:1px solid var(--line-light);}
+  footer b{color:rgba(255,251,245,0.65); font-weight:500;}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-brand">
+    <div class="nav-mark"><svg viewBox="0 0 30 30"><circle cx="15" cy="15" r="14" fill="none" stroke="#EB6A1E" stroke-width="1.4"/><path d="M9 20 L14 8 M14 20 L19 8 M19 20 L23 10" stroke="#EB6A1E" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+    <div class="nav-title">跑跑 · 司导赋能手册<small>KUAIBANGXING · 2026 内部版</small></div>
+  </div>
+  <nav class="nav-links">
+    <a href="#m1"><span class="num">01</span>高效沟通</a>
+    <a href="#m2"><span class="num">02</span>结算必读</a>
+    <a href="#m3"><span class="num">03</span>争议处理</a>
+    <a href="#m4"><span class="num">04</span>成长路径</a>
+  </nav>
+  <button class="nav-cta" onclick="document.getElementById('ceremony').scrollIntoView({behavior:'smooth'})">签署契约</button>
+</header>
+
+<section class="hero">
+  <div class="hero-slashes">
+    <span style="left:8%; top:-10%; height:60%;"></span>
+    <span style="left:14%; top:20%; height:80%;"></span>
+    <span style="left:88%; top:-5%; height:50%;"></span>
+    <span style="left:94%; top:30%; height:65%;"></span>
+  </div>
+
+  <svg class="hero-brain" viewBox="0 0 460 420" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="brainGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#EB6A1E"/>
+        <stop offset="100%" stop-color="#C89A48"/>
+      </linearGradient>
+    </defs>
+    <path class="brain-outline" d="M110,150 C90,90 150,40 210,55 C225,25 285,20 305,55 C365,45 410,95 395,155 C425,180 420,235 385,255 C395,295 355,320 315,305 C300,335 235,338 210,310 C160,320 115,290 120,250 C80,235 78,190 110,150 Z" fill="none" stroke="url(#brainGrad)" stroke-width="2"/>
+    <g stroke="url(#brainGrad)" stroke-width="1.2" opacity=".55">
+      <line class="flow-line" x1="150" y1="130" x2="210" y2="100"/>
+      <line class="flow-line" x1="210" y1="100" x2="280" y2="110" style="animation-delay:-.6s"/>
+      <line class="flow-line" x1="280" y1="110" x2="340" y2="150" style="animation-delay:-1.2s"/>
+      <line class="flow-line" x1="150" y1="130" x2="140" y2="200" style="animation-delay:-.4s"/>
+      <line class="flow-line" x1="140" y1="200" x2="180" y2="250" style="animation-delay:-1.8s"/>
+      <line class="flow-line" x1="180" y1="250" x2="250" y2="270" style="animation-delay:-1s"/>
+      <line class="flow-line" x1="250" y1="270" x2="320" y2="240" style="animation-delay:-2.2s"/>
+      <line class="flow-line" x1="320" y1="240" x2="340" y2="150" style="animation-delay:-.8s"/>
+      <line class="flow-line" x1="210" y1="100" x2="180" y2="250" style="animation-delay:-1.4s"/>
+      <line class="flow-line" x1="280" y1="110" x2="250" y2="270" style="animation-delay:-2s"/>
+    </g>
+    <g fill="#EB6A1E">
+      <circle class="pulse-node" cx="150" cy="130" r="3.4" style="animation-delay:-.2s"/>
+      <circle class="pulse-node" cx="210" cy="100" r="3.4" style="animation-delay:-1.1s"/>
+      <circle class="pulse-node" cx="280" cy="110" r="3.4" style="animation-delay:-.5s"/>
+      <circle class="pulse-node" cx="340" cy="150" r="3.4" style="animation-delay:-1.7s"/>
+      <circle class="pulse-node" cx="140" cy="200" r="3.4" style="animation-delay:-2.3s"/>
+      <circle class="pulse-node" cx="180" cy="250" r="3.4" style="animation-delay:-.8s"/>
+      <circle class="pulse-node" cx="250" cy="270" r="3.4" style="animation-delay:-1.4s"/>
+      <circle class="pulse-node" cx="320" cy="240" r="3.4" style="animation-delay:-2s"/>
+    </g>
+    <g fill="#C89A48">
+      <circle r="2.6"><animateMotion dur="3.6s" repeatCount="indefinite" path="M20,60 C90,90 130,110 150,130"/></circle>
+      <circle r="2.6"><animateMotion dur="4.2s" repeatCount="indefinite" path="M440,60 C380,80 320,90 280,110"/></circle>
+      <circle r="2.6"><animateMotion dur="3.8s" repeatCount="indefinite" path="M40,320 C90,290 140,270 180,250"/></circle>
+      <circle r="2.6"><animateMotion dur="4.6s" repeatCount="indefinite" path="M420,300 C380,270 350,260 320,240"/></circle>
+    </g>
+  </svg>
+
+  <div class="hero-eyebrow">🚀 PAO PAO · 2026 内部版</div>
+  <h1>跑跑（Pao Pao）<br>快帮行司导<em>赋能手册</em></h1>
+  <p class="lead">这份手册是旅游行业的"避坑"锦囊——规则在手，收益我有，咱们一起跑得轻松，赚得稳当。</p>
+
+  <div class="coach">
+    <div class="coach-avatar">飞</div>
+    <div>
+      <div class="coach-name">教练致辞 · 小飞</div>
+      <p>嘿，新伙伴，欢迎来到"跑跑"大家庭！我是你的教练小飞。把这份手册看作是旅游行业的"避坑"锦囊吧。规则在手，收益我有，咱们一起跑得轻松，赚得稳当！</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-intro">
+  <div class="tag">HANDBOOK · 四个章节</div>
+  <h2>点开每一章，跑清楚每一步</h2>
+  <p>从沟通话术到结算节点，从争议处理到晋升路径，点击任一章节标题即可展开详情。跑跑司导最关心的四件事，都在这里：</p>
+  <div class="keywords">
+    <a class="kw-pill" href="#m1"><span class="kw-num">01</span>沟通话术</a>
+    <a class="kw-pill" href="#m2"><span class="kw-num">02</span>结算必读</a>
+    <a class="kw-pill" href="#m3"><span class="kw-num">03</span>公正裁决</a>
+    <a class="kw-pill" href="#m4"><span class="kw-num">04</span>成长收益</a>
+  </div>
+</div>
+
+<div class="modules">
+
+  <div class="mod" id="m1">
+    <button class="mod-head" onclick="toggleMod(this)">
+      <span class="mod-ico"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#1C1712" stroke-width="1.6"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3" stroke="#1C1712" stroke-width="1.6" stroke-linecap="round"/><path d="M15.5 8.5l-4 3-1.5 4.5 4-3 1.5-4.5z" fill="#1C1712"/></svg></span>
+      <h3>第一章 · 高效沟通</h3>
+      <span class="sub">预判，是高级服务的开始</span>
+      <span class="mod-icon"></span>
+    </button>
+    <div class="mod-body">
+      <div class="mod-body-inner">
+        <div>
+          <p>很多时候我们觉得累，是因为沟通太被动。试试这招"前置沟通"，你会发现服务顺畅很多。</p>
+          <ul>
+            <li><b>必备动作</b>接单后，第一时间发送确认信息给乘客。</li>
+          </ul>
+          <div class="quote-line">"您好！我是您的专属司导 [你的姓名]。您的行程我已同步，预计 [时间] 提前联系您。如有变动请随时告知。"</div>
+        </div>
+        <div class="mod-panel">
+          <div class="panel-title">教练提醒</div>
+          <p>凡是乘客来问你的，都是"沟通冗余"；凡是你提前告知的，都是"专业背书"。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mod" id="m2">
+    <button class="mod-head" onclick="toggleMod(this)">
+      <span class="mod-ico"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#1C1712" stroke-width="1.6"/><path d="M12 7v5l3.5 2" stroke="#1C1712" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <h3>第二章 · 时间智慧</h3>
+      <span class="sub">结算必读 · 你的钱怎么到账</span>
+      <span class="mod-icon"></span>
+    </button>
+    <div class="mod-body">
+      <div class="mod-body-inner">
+        <div>
+          <p>为了确保每一笔收益的准确性，咱们有个重要的约定 —— <b style="color:var(--rust)">"4 小时后"原则</b>。</p>
+          <ul>
+            <li><b>怎么做</b>服务结束后，请大家耐心等待 4 小时后再点击【结束服务】。</li>
+            <li><b>为什么</b>这 4 小时的缓冲，是给系统同步数据的最佳窗口，能极大减少后续对账的麻烦。</li>
+          </ul>
+        </div>
+        <div class="mod-panel">
+          <div class="panel-title">缓冲窗口示意</div>
+          <div class="hour-row"><div class="hour-track"><div class="buf"></div></div></div>
+          <div class="hour-caps"><span>服务结束</span><span>+4H 数据同步</span><span>可点结束服务</span></div>
+          <p style="margin-top:16px;">教练贴士：多等这 4 小时，不仅是为了数据的精准，也是为了让咱的结算流程更顺畅，大家都放心！</p>
+        </div>
+
+        <div class="mustread" id="mustread">
+          <div class="mustread-head">
+            <span class="mustread-tag">必读</span>
+            <h4>结算周期总览 · 直客 vs 同行</h4>
+          </div>
+
+          <div class="weeks-head"><span></span><span>第一周</span><span>第二周</span><span>第三周</span></div>
+
+          <div class="wk-row">
+            <div class="rowlabel" style="color:#0F6E56;">直客订单</div>
+            <div class="wk-card teal"><div class="k">订单结束日</div><div class="v">当周跑完</div></div>
+            <div class="wk-card teal"><div class="k">入账</div><div class="v">直接到账</div></div>
+            <div class="wk-card empty"></div>
+          </div>
+
+          <div class="wk-row">
+            <div class="rowlabel" style="color:#993C1D;">同行订单</div>
+            <div class="wk-card coral"><div class="k">订单结束日</div><div class="v">当周跑完</div></div>
+            <div class="wk-card coral"><div class="k">缓冲审核</div><div class="v">中间等待一周</div></div>
+            <div class="wk-card coral"><div class="k">入账</div><div class="v">延后到账</div></div>
+          </div>
+
+          <div class="mustread-note">直客当周订单结束，次周即入账；同行多一周缓冲，第三周才入账。请务必认读并知晓这一差异，避免对账期间的误解。</div>
+
+          <label class="mustread-ack">
+            <input type="checkbox" id="ackCheck">
+            <span>我已认真阅读并知晓「直客 / 同行」结算周期差异</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mod" id="m3">
+    <button class="mod-head" onclick="toggleMod(this)">
+      <span class="mod-ico"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M6 6l-3 6h6l-3-6zM18 6l-3 6h6l-3-6zM5 12a3 3 0 006 0M15 12a3 3 0 006 0M8 21h8" stroke="#1C1712" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <h3>第三章 · 争议处理</h3>
+      <span class="sub">让系统做裁判</span>
+      <span class="mod-icon"></span>
+    </button>
+    <div class="mod-body">
+      <div class="mod-body-inner">
+        <div>
+          <p>我们拒绝私下扯皮，拒绝电话对账，我们要的是高效与公正。</p>
+          <ul>
+            <li><b>处理纪律</b>系统记录即结算基准，工单提交后，系统将在 48 小时内完成自动校验。</li>
+          </ul>
+        </div>
+        <div class="mod-panel">
+          <div class="panel-title">处理通道</div>
+          <p>所有关于金额、里程的疑义，请统一提交工单，并务必填写你的【订单号】。</p>
+          <a class="ph-link" href="#" onclick="return false;">插入你的争议工单链接 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mod" id="m4">
+    <button class="mod-head" onclick="toggleMod(this)">
+      <span class="mod-ico"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20V10M11 20V4M18 20v-7" stroke="#1C1712" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+      <h3>第四章 · 成长路径</h3>
+      <span class="sub">你值得更好的回报</span>
+      <span class="mod-icon"></span>
+    </button>
+    <div class="mod-body">
+      <div class="mod-body-inner">
+        <div>
+          <p>你的每一份用心，平台都看得见。</p>
+        </div>
+        <div class="mod-panel">
+          <div class="panel-title">三级成长阶梯</div>
+          <div class="ladder">
+            <div class="rung l1"><span class="lv">L1</span><div class="desc"><b>准入司导</b> — 完成本手册阅读并签署《行动契约》。</div></div>
+            <div class="rung l2"><span class="lv">L2</span><div class="desc"><b>精英司导</b> — 保持高好评（>98%），30 单无投诉，服务稳健。</div></div>
+            <div class="rung l3"><span class="lv">L3</span><div class="desc"><b>跑跑教练</b> — 不仅能高效接单，还能获得平台带教扶持与额外收益。</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<section class="ceremony" id="ceremony">
+  <div class="ceremony-slashes">
+    <span style="left:20%; top:0; height:100%;"></span>
+    <span style="left:26%; top:15%; height:80%;"></span>
+    <span style="left:74%; top:5%; height:90%;"></span>
+    <span style="left:80%; top:20%; height:70%;"></span>
+  </div>
+
+  <div class="tag">行动契约 · ACTION COVENANT</div>
+  <div class="badge-wrap">
+    <div class="badge-medal">
+      <div class="ring"></div>
+      <img src="跑跑认证司导勋章.jpg" alt="跑跑认证司导 勋章">
+    </div>
+    <div>
+      <h2>凡阅读，即视为承诺</h2>
+      <p class="desc">凡点击本手册链接阅读的伙伴，即视为已完全理解并自愿遵守上述各项规则。感谢每一位伙伴的专业与配合，咱们一起把服务做好！</p>
+    </div>
+  </div>
+
+  <div class="oath-box">
+    <div class="oath-title">确认遵守</div>
+    <p>我已阅读并理解高效沟通、结算时间原则（含直客 / 同行结算周期差异）与争议处理规则，愿意以"跑跑认证司导"的标准对待每一位客人、每一趟行程。</p>
+
+    <div class="slider" id="slider">
+      <div class="slider-fill" id="sliderFill"></div>
+      <div class="slider-label" id="sliderLabel">向右滑动，确认遵守 →</div>
+      <div class="slider-handle" id="sliderHandle">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#1C1712" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="signed-state" id="signedState">
+    <div class="stamp-row">
+      <div class="stamp"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="#C89A48" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="signed-text">
+        <div class="t1">签署完成 · 行动契约已确认</div>
+        <div class="t2" id="signTime">SIGNED AT --</div>
+      </div>
+    </div>
+    <p class="signed-msg">🏆 恭喜你，正式加入跑跑大家庭！你已完整阅读并确认了《跑跑司导行动契约》。作为一名专业的"跑跑英雄"，我们为你准备了专属的身份勋章。</p>
+    <button class="claim-btn" onclick="return false;">领取「跑跑认证司导」电子勋章</button>
+  </div>
+
+  <div class="particles" id="particles"></div>
+</section>
+
+<footer>
+  © 2016–2026 北京快帮行科技有限公司 &nbsp;·&nbsp; <b>跑跑司导赋能手册</b> &nbsp;·&nbsp; 内部培训材料，请勿外传
+</footer>
+
+<script>
+function toggleMod(btn){
+  var mod = btn.parentElement;
+  var body = mod.querySelector('.mod-body');
+  var isOpen = mod.classList.contains('open');
+  document.querySelectorAll('.mod.open').forEach(function(m){
+    if(m!==mod){ m.classList.remove('open'); m.querySelector('.mod-body').style.maxHeight=null; }
+  });
+  if(isOpen){
+    mod.classList.remove('open');
+    body.style.maxHeight = null;
+  }else{
+    mod.classList.add('open');
+    body.style.maxHeight = body.scrollHeight + 'px';
+  }
+}
+
+(function(){
+  var slider = document.getElementById('slider');
+  var handle = document.getElementById('sliderHandle');
+  var fill = document.getElementById('sliderFill');
+  var label = document.getElementById('sliderLabel');
+  var signedState = document.getElementById('signedState');
+  var signTime = document.getElementById('signTime');
+  var particles = document.getElementById('particles');
+  var dragging = false, done = false;
+  var handleW = 50, pad = 3;
+
+  function setPos(x){
+    var max = slider.offsetWidth - handleW - pad*2;
+    x = Math.max(0, Math.min(x, max));
+    handle.style.left = (x+pad) + 'px';
+    fill.style.width = (x + handleW + pad) + 'px';
+    if(x >= max - 2 && !done){ complete(); }
+  }
+
+  function complete(){
+    done = true;
+    slider.classList.add('done');
+    label.textContent = '已确认';
+    var now = new Date();
+    var hh = String(now.getHours()).padStart(2,'0');
+    var mm = String(now.getMinutes()).padStart(2,'0');
+    var y = now.getFullYear(), mo = String(now.getMonth()+1).padStart(2,'0'), d = String(now.getDate()).padStart(2,'0');
+    signTime.textContent = 'SIGNED AT ' + y+'-'+mo+'-'+d+' '+hh+':'+mm;
+    signedState.classList.add('show');
+    burst();
+  }
+
+  function burst(){
+    for(var i=0;i<26;i++){
+      var p = document.createElement('div');
+      p.className = 'particle' + (i%3===0 ? ' gold':'');
+      var angle = Math.random()*Math.PI*2;
+      var dist = 60 + Math.random()*140;
+      var dx = Math.cos(angle)*dist, dy = Math.sin(angle)*dist - 40;
+      p.style.transform = 'translate(-50%,-50%)';
+      particles.appendChild(p);
+      p.animate([
+        { transform:'translate(-50%,-50%) translate(0,0) rotate(0deg)', opacity:0 },
+        { offset:0.15, opacity:1 },
+        { transform:'translate(-50%,-50%) translate('+dx+'px,'+dy+'px) rotate('+(Math.random()*360)+'deg)', opacity:0 }
+      ], { duration: 900 + Math.random()*500, easing:'cubic-bezier(.2,.6,.3,1)' });
+      (function(el){ setTimeout(function(){ el.remove(); }, 1500); })(p);
+    }
+  }
+
+  function pointerDown(e){
+    if(done) return;
+    var ack = document.getElementById('ackCheck');
+    if(ack && !ack.checked){
+      var mod2 = document.getElementById('m2');
+      if(!mod2.classList.contains('open')){ mod2.querySelector('.mod-head').click(); }
+      var mr = document.getElementById('mustread');
+      mr.scrollIntoView({behavior:'smooth', block:'center'});
+      mr.classList.remove('shake'); void mr.offsetWidth; mr.classList.add('shake');
+      label.textContent = '请先阅读并勾选结算周期确认';
+      setTimeout(function(){ label.textContent = '向右滑动，确认遵守 →'; }, 2200);
+      return;
+    }
+    dragging = true;
+    handle.style.transition = 'none';
+    fill.style.transition = 'none';
+  }
+  function pointerMove(e){
+    if(!dragging || done) return;
+    var rect = slider.getBoundingClientRect();
+    var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    setPos(clientX - rect.left - handleW/2);
+  }
+  function pointerUp(){
+    if(!dragging) return;
+    dragging = false;
+    handle.style.transition = 'left .25s ease';
+    fill.style.transition = 'width .25s ease';
+    if(!done){ setPos(0); }
+  }
+
+  handle.addEventListener('mousedown', pointerDown);
+  handle.addEventListener('touchstart', pointerDown, {passive:true});
+  window.addEventListener('mousemove', pointerMove);
+  window.addEventListener('touchmove', pointerMove, {passive:true});
+  window.addEventListener('mouseup', pointerUp);
+  window.addEventListener('touchend', pointerUp);
+})();
+</script>
+
+</body>
+</html>
