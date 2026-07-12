@@ -27,8 +27,19 @@
   h1{
     font-size:18px;
     color:#7a3712;
-    margin-bottom:16px;
+    margin-bottom:8px;
     letter-spacing:1px;
+  }
+  .page-subtitle{
+    font-size:13.5px;
+    color:#a05a2c;
+    text-align:center;
+    line-height:1.6;
+    margin-bottom:16px;
+    max-width:340px;
+  }
+  .page-subtitle b{
+    color:var(--orange-deep);
   }
 
   /* ---------- 表单区 ---------- */
@@ -246,6 +257,7 @@
 <body>
 
 <h1>🚗 司导卡生成器</h1>
+<p class="page-subtitle">把下面的<b>姓名、车辆等信息</b>换成您自己的，即可生成专属服务卡，让乘客一眼记住您！</p>
 
 <div class="form-card">
   <div class="field">
@@ -283,7 +295,41 @@
   <div class="card-title" style="margin-top:6px;">您的专业司导服务前致意</div>
 
   <div class="info-panel">
-    <div class="car-photo-banner" id="photoBox">上传车辆照片</div>
+    <div class="car-photo-banner" id="photoBox"><svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff8f2"/>
+      <stop offset="100%" stop-color="#ffe9da"/>
+    </linearGradient>
+    <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f5f4f2"/>
+      <stop offset="55%" stop-color="#e3e1de"/>
+      <stop offset="100%" stop-color="#c9c7c3"/>
+    </linearGradient>
+    <linearGradient id="glassGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8fa3ad"/>
+      <stop offset="100%" stop-color="#5c7078"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="400" height="200" fill="url(#skyGrad)"/>
+  <rect x="0" y="168" width="400" height="32" fill="#f2ece5"/>
+  <ellipse cx="205" cy="172" rx="172" ry="8" fill="#000000" opacity="0.08"/>
+  <path d="M50,164 L50,136 Q50,108 79,98 L108,62 Q128,46 158,46 L279,46 Q309,46 324,66 L344,99 Q360,104 360,129 L360,164 Z" fill="url(#bodyGrad)" stroke="#b7b4af" stroke-width="1"/>
+  <path d="M120,96 L142,64 Q152,56 165,56 L204,56 L204,96 Z" fill="url(#glassGrad)"/>
+  <path d="M210,56 L272,56 Q296,56 308,72 L318,96 L210,96 Z" fill="url(#glassGrad)"/>
+  <rect x="204" y="56" width="6" height="40" fill="#c9c7c3"/>
+  <rect x="55" y="150" width="305" height="7" fill="#FF7F3F" opacity="0.85"/>
+  <line x1="242" y1="99" x2="242" y2="150" stroke="#b7b4af" stroke-width="1.2"/>
+  <rect x="252" y="118" width="14" height="4" rx="2" fill="#8a8781"/>
+  <circle cx="112" cy="164" r="23" fill="#2c2c2c"/>
+  <circle cx="112" cy="164" r="12" fill="#d8d6d2"/>
+  <circle cx="112" cy="164" r="4" fill="#8a8781"/>
+  <circle cx="304" cy="164" r="23" fill="#2c2c2c"/>
+  <circle cx="304" cy="164" r="12" fill="#d8d6d2"/>
+  <circle cx="304" cy="164" r="4" fill="#8a8781"/>
+  <path d="M108,66 Q100,62 92,68" fill="none" stroke="#b7b4af" stroke-width="1.2" stroke-linecap="round"/>
+  <ellipse cx="349" cy="118" rx="7" ry="5" fill="#fff3d6" stroke="#d8b96a" stroke-width="0.8"/>
+</svg></div>
     <div class="fields-grid">
       <div class="info-item"><span class="k">名字：</span><span id="pvName">张小飞</span></div>
       <div class="info-item"><span class="k">电话：</span><span id="pvPhone">206-xxx-7579</span></div>
