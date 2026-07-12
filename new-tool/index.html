@@ -227,24 +227,26 @@
     max-width:400px;
     display:flex;
     justify-content:center;
-    gap:28px;
     margin-top:22px;
   }
-  .icon-btn{
-    width:56px;
-    height:56px;
-    border-radius:50%;
-    border:none;
-    background: linear-gradient(135deg, rgba(255,127,63,0.15), rgba(232,93,31,0.15));
-    color: var(--orange-deep);
+  .download-btn{
     display:flex;
     align-items:center;
     justify-content:center;
+    gap:8px;
+    width:100%;
+    padding:14px;
+    border-radius:14px;
+    border:none;
+    background: linear-gradient(135deg, var(--orange), var(--orange-deep));
+    color:#fff;
+    font-size:15px;
+    font-weight:700;
     cursor:pointer;
-    box-shadow:0 6px 16px rgba(230,90,20,0.18);
+    box-shadow:0 8px 20px rgba(230,90,20,0.28);
   }
-  .icon-btn svg{ width:24px; height:24px; }
-  .icon-btn:active{ transform:scale(0.94); }
+  .download-btn svg{ width:20px; height:20px; }
+  .download-btn:active{ transform:scale(0.98); }
 
   .hint{
     color:#b06a3a;
@@ -344,24 +346,16 @@
 </div>
 
 <div class="icon-actions">
-  <button class="icon-btn" id="shareBtn" title="分享">
-    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="18" cy="5" r="3" stroke="currentColor" stroke-width="2"/>
-      <circle cx="6" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
-      <circle cx="18" cy="19" r="3" stroke="currentColor" stroke-width="2"/>
-      <line x1="8.6" y1="10.6" x2="15.4" y2="6.4" stroke="currentColor" stroke-width="2"/>
-      <line x1="8.6" y1="13.4" x2="15.4" y2="17.6" stroke="currentColor" stroke-width="2"/>
-    </svg>
-  </button>
-  <button class="icon-btn" id="saveBtn" title="下载">
+  <button class="download-btn" id="saveBtn">
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 3v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
       <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M4 19h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
     </svg>
+    下载图片
   </button>
 </div>
-<div class="hint">下载直接发送给服务群</div>
+<div class="hint">点击后长按图片保存，即可发送到微信群</div>
 </div>
 
 
@@ -406,38 +400,46 @@
     reader.readAsDataURL(file);
   });
 
-  document.getElementById('saveBtn').addEventListener('click', () => {
+  function generateCardJpeg(callback){
     html2canvas(card, {
       scale: 3,
       useCORS: true,
-      backgroundColor: null
+      backgroundColor: '#ffffff'
     }).then(canvas => {
-      const link = document.createElement('a');
-      link.download = '司导卡.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+      callback(dataUrl);
     });
-  });
+  }
 
-  document.getElementById('shareBtn').addEventListener('click', () => {
-    html2canvas(card, {
-      scale: 3,
-      useCORS: true,
-      backgroundColor: null
-    }).then(canvas => {
-      canvas.toBlob(async (blob) => {
-        const file = new File([blob], '司导卡.png', { type: 'image/png' });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          try {
-            await navigator.share({ files: [file], title: '司导卡' });
-          } catch (err) { /* 用户取消分享，忽略 */ }
-        } else {
-          const link = document.createElement('a');
-          link.download = '司导卡.png';
-          link.href = canvas.toDataURL('image/png');
-          link.click();
-        }
-      });
+  function openSaveTab(dataUrl){
+    const win = window.open('', '_blank');
+    if (!win) {
+      alert('未能打开新页面，请允许弹出窗口后重试');
+      return;
+    }
+    win.document.write(
+      '<!DOCTYPE html><html><head><meta charset="UTF-8">' +
+      '<meta name="viewport" content="width=device-width, initial-scale=1.0">' +
+      '<title>司导服务卡</title></head>' +
+      '<body style="margin:0;background:#1a1a1a;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-family:sans-serif;padding:20px;box-sizing:border-box;">' +
+      '<p style="color:#fff;font-size:15px;margin-bottom:16px;text-align:center;">长按下方图片，选择"保存图片"或"发送给朋友"，即可发到微信群</p>' +
+      '<img src="' + dataUrl + '" style="max-width:100%;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,0.4);">' +
+      '</body></html>'
+    );
+    win.document.close();
+  }
+
+  document.getElementById('saveBtn').addEventListener('click', () => {
+    generateCardJpeg((dataUrl) => {
+      try {
+        const link = document.createElement('a');
+        link.download = '司导服务卡.jpg';
+        link.href = dataUrl;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (err) { /* 部分浏览器不支持直接下载，走下方保存页兜底 */ }
+      openSaveTab(dataUrl);
     });
   });
 </script>
