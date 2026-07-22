@@ -227,9 +227,14 @@
   .result-card{display:none; max-width:480px; margin:34px auto 0; position:relative; z-index:2;}
   .result-card.show{display:block; animation:riseIn .5s ease both;}
   .result-card canvas{display:none;}
-  .result-card #badgeResultImg{width:100%; height:auto; border-radius:10px; border:1px solid var(--line-light); display:block; margin-bottom:18px;}
-  .result-note{font-size:12.5px; color:rgba(255,251,245,.55); margin:14px 0 0; line-height:1.7;}
-  .result-note.warn{color:#e0bd72;}
+  .result-card #badgeResultImg{width:100%; height:auto; border-radius:10px; border:1px solid var(--line-light); display:block; margin-bottom:16px;}
+  .save-hint{display:flex; align-items:center; justify-content:center; gap:10px; margin:0 0 6px; padding:14px 18px; border-radius:12px; background:linear-gradient(90deg, rgba(200,154,72,.18), rgba(200,154,72,.08)); border:1px solid rgba(200,154,72,.5); box-shadow:0 0 0 3px rgba(200,154,72,.06);}
+  .save-hint-icon{font-size:22px; animation:pressPulse 1.3s ease-in-out infinite;}
+  .save-hint-text{font-size:15px; font-weight:700; color:var(--gold); letter-spacing:.02em;}
+  .save-hint-text em{font-style:normal; text-decoration:underline; text-underline-offset:3px;}
+  .save-hint.warn{border-color:rgba(224,189,114,.7); background:linear-gradient(90deg, rgba(224,189,114,.2), rgba(224,189,114,.08));}
+  .result-note{font-size:12.5px; color:rgba(255,251,245,.5); margin:0 0 18px; line-height:1.7;}
+  @keyframes pressPulse{0%,100%{transform:scale(1); opacity:1;} 50%{transform:scale(1.18); opacity:.75;}}
 
   .particles{position:absolute; inset:0; pointer-events:none; z-index:1;}
   .particle{position:absolute; width:5px; height:5px; background:var(--orange); border-radius:1px; opacity:0; top:50%; left:50%;}
@@ -540,7 +545,11 @@
   <div class="result-card" id="resultCard">
     <canvas id="badgeCanvas"></canvas>
     <img id="badgeResultImg" alt="跑跑认证司导专属勋章">
-    <p class="result-note" id="resultNote">长按上方勋章图片，选择"保存图片"即可保存到相册，再发送给快帮行管理员完成认证备案。</p>
+    <div class="save-hint" id="saveHint">
+      <span class="save-hint-icon">👆</span>
+      <span class="save-hint-text" id="saveHintText">长按上方勋章图片，选择<em>"保存图片"</em>保存到相册</span>
+    </div>
+    <p class="result-note" id="resultNote">保存后请发送给快帮行管理员，完成认证备案。</p>
   </div>
 
   <div class="particles" id="particles"></div>
@@ -693,6 +702,8 @@ function openMod(id){
 
       var resultCard = document.getElementById('resultCard');
       var resultImg = document.getElementById('badgeResultImg');
+      var saveHint = document.getElementById('saveHint');
+      var saveHintText = document.getElementById('saveHintText');
       var note = document.getElementById('resultNote');
 
       try{
@@ -700,8 +711,9 @@ function openMod(id){
         resultImg.src = dataUrl;
         resultImg.style.display = '';
         canvas.style.display = 'none';
-        note.textContent = '长按上方勋章图片，选择"保存图片"即可保存到相册，再发送给快帮行管理员完成认证备案。';
-        note.classList.remove('warn');
+        saveHint.classList.remove('warn');
+        saveHintText.innerHTML = '长按上方勋章图片，选择<em>"保存图片"</em>保存到相册';
+        note.textContent = '保存后请发送给快帮行管理员，完成认证备案。';
       }catch(err){
         // 画布被跨域图片污染，无法导出为图片时的兜底：
         // 直接把canvas本身显示出来，让用户长按/截图保存
@@ -711,9 +723,10 @@ function openMod(id){
         canvas.style.height = 'auto';
         canvas.style.borderRadius = '10px';
         canvas.style.border = '1px solid var(--line-light)';
-        canvas.style.marginBottom = '18px';
-        note.textContent = '长按上方勋章图片选择"保存图片"；若无法保存，请直接截图后发送给快帮行管理员完成认证备案。';
-        note.classList.add('warn');
+        canvas.style.marginBottom = '16px';
+        saveHint.classList.add('warn');
+        saveHintText.innerHTML = '长按上方勋章图片试试<em>"保存图片"</em>，若无效请直接截图';
+        note.textContent = '保存/截图后请发送给快帮行管理员，完成认证备案。';
       }
 
       resultCard.classList.add('show');
