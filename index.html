@@ -230,7 +230,6 @@
   .result-card #badgeResultImg{width:100%; height:auto; border-radius:10px; border:1px solid var(--line-light); display:block; margin-bottom:18px;}
   .result-note{font-size:12.5px; color:rgba(255,251,245,.55); margin:14px 0 0; line-height:1.7;}
   .result-note.warn{color:#e0bd72;}
-  .claim-btn.disabled{opacity:.45; cursor:not-allowed; pointer-events:none;}
 
   .particles{position:absolute; inset:0; pointer-events:none; z-index:1;}
   .particle{position:absolute; width:5px; height:5px; background:var(--orange); border-radius:1px; opacity:0; top:50%; left:50%;}
@@ -541,8 +540,7 @@
   <div class="result-card" id="resultCard">
     <canvas id="badgeCanvas"></canvas>
     <img id="badgeResultImg" alt="跑跑认证司导专属勋章">
-    <a class="claim-btn" id="downloadLink" download="跑跑认证司导勋章.png">下载勋章图片</a>
-    <p class="result-note" id="resultNote">请点击上方按钮下载图片；如果点击无效（例如在微信内打开），请长按上方的勋章图片选择"保存图片"，再发送给快帮行管理员完成认证备案。</p>
+    <p class="result-note" id="resultNote">长按上方勋章图片，选择"保存图片"即可保存到相册，再发送给快帮行管理员完成认证备案。</p>
   </div>
 
   <div class="particles" id="particles"></div>
@@ -695,17 +693,14 @@ function openMod(id){
 
       var resultCard = document.getElementById('resultCard');
       var resultImg = document.getElementById('badgeResultImg');
-      var link = document.getElementById('downloadLink');
       var note = document.getElementById('resultNote');
 
       try{
         var dataUrl = canvas.toDataURL('image/png');
         resultImg.src = dataUrl;
-        link.href = dataUrl;
-        link.download = '跑跑认证司导勋章-' + name + '.png';
-        link.classList.remove('disabled');
-        link.style.display = '';
-        note.textContent = '请点击上方按钮下载图片；如果点击无效（例如在微信内打开），请长按上方的勋章图片选择"保存图片"，再发送给快帮行管理员完成认证备案。';
+        resultImg.style.display = '';
+        canvas.style.display = 'none';
+        note.textContent = '长按上方勋章图片，选择"保存图片"即可保存到相册，再发送给快帮行管理员完成认证备案。';
         note.classList.remove('warn');
       }catch(err){
         // 画布被跨域图片污染，无法导出为图片时的兜底：
@@ -717,9 +712,7 @@ function openMod(id){
         canvas.style.borderRadius = '10px';
         canvas.style.border = '1px solid var(--line-light)';
         canvas.style.marginBottom = '18px';
-        link.classList.add('disabled');
-        link.textContent = '当前环境无法直接下载';
-        note.textContent = '当前页面环境限制了图片导出，请长按上方勋章图片选择"保存图片"，或直接截图后发送给快帮行管理员完成认证备案。';
+        note.textContent = '长按上方勋章图片选择"保存图片"；若无法保存，请直接截图后发送给快帮行管理员完成认证备案。';
         note.classList.add('warn');
       }
 
