@@ -113,6 +113,27 @@
   .mod-panel p:last-child{margin-bottom:0;}
   .ph-link{display:inline-flex; align-items:center; gap:8px; margin-top:6px; padding:9px 14px; border:1px dashed var(--gold); border-radius:5px; font-size:12.5px; color:var(--rust); font-family:'JetBrains Mono'; text-decoration:none;}
 
+  /* ---------- 拖拽排序 · 理解检验 ---------- */
+  .sort-wrap{user-select:none;}
+  .sort-hint{display:flex; align-items:center; gap:8px; font-family:'JetBrains Mono'; font-size:11px; letter-spacing:.05em; color:rgba(28,23,18,.42); margin-bottom:14px;}
+  .sort-hint svg{width:14px;height:14px; flex-shrink:0; opacity:.7;}
+  .sort-list{display:flex; flex-direction:column; gap:8px; touch-action:none;}
+  .sort-item{display:flex; align-items:center; gap:12px; background:var(--parchment); border:1.5px solid var(--line); border-radius:8px; padding:12px 14px; cursor:grab; transition:border-color .2s ease, background .2s ease, box-shadow .2s ease; position:relative;}
+  .sort-item.dragging{cursor:grabbing; z-index:5; box-shadow:0 10px 24px rgba(28,23,18,.18); background:var(--off-white); border-color:var(--orange);}
+  .sort-item.correct{border-color:#0F6E56; background:#E6F3EF;}
+  .sort-item.wrong{border-color:var(--rust); background:#FBEBE3;}
+  .sort-handle{flex-shrink:0; width:18px; height:18px; display:flex; align-items:center; justify-content:center; color:rgba(28,23,18,.35);}
+  .sort-handle svg{width:16px;height:16px;}
+  .sort-num{font-family:'JetBrains Mono'; font-size:11px; color:var(--gold); flex-shrink:0; width:16px;}
+  .sort-text{font-size:13.5px; line-height:1.5; color:var(--ink); flex:1;}
+  .sort-check{display:flex; align-items:center; gap:10px; margin-top:18px; flex-wrap:wrap;}
+  .sort-check-btn{background:var(--ink); color:var(--off-white); border:none; padding:11px 22px; border-radius:22px; font-size:13px; font-weight:600; cursor:pointer; font-family:'Noto Sans SC'; transition:background .2s ease;}
+  .sort-check-btn:hover{background:#2b2118;}
+  .sort-feedback{font-size:12.5px; line-height:1.6; padding:0; margin:0;}
+  .sort-feedback.success{color:#0F6E56; font-weight:600;}
+  .sort-feedback.warn{color:var(--rust); font-weight:600;}
+  .sort-list.shake{animation:shakeX .4s ease;}
+
   /* 4-hour timeline */
   .hour-row{display:flex; align-items:center; gap:10px; margin-bottom:6px;}
   .hour-track{flex:1; height:8px; border-radius:5px; background:var(--parchment-deep); position:relative; overflow:hidden;}
@@ -256,6 +277,7 @@
     <a href="#m2" onclick="openMod('m2');return false;"><span class="num">02</span>结算必读</a>
     <a href="#m3" onclick="openMod('m3');return false;"><span class="num">03</span>公正裁决</a>
     <a href="#m4" onclick="openMod('m4');return false;"><span class="num">04</span>成长收益</a>
+    <a href="#m5" onclick="openMod('m5');return false;"><span class="num">05</span>上岗认证</a>
   </nav>
   <button class="nav-cta" onclick="document.getElementById('ceremony').scrollIntoView({behavior:'smooth'})">签署契约</button>
 </header>
@@ -348,6 +370,7 @@
     <a class="kw-pill" href="#m2" onclick="openMod('m2');return false;"><span class="kw-num">02</span>结算必读</a>
     <a class="kw-pill" href="#m3" onclick="openMod('m3');return false;"><span class="kw-num">03</span>公正裁决</a>
     <a class="kw-pill" href="#m4" onclick="openMod('m4');return false;"><span class="kw-num">04</span>成长收益</a>
+    <a class="kw-pill" href="#m5" onclick="openMod('m5');return false;"><span class="kw-num">05</span>上岗认证</a>
   </div>
 </div>
 
@@ -476,6 +499,38 @@
     </div>
   </div>
 
+  <div class="mod" id="m5">
+    <button class="mod-head" onclick="toggleMod(this)">
+      <span class="mod-ico"><svg viewBox="0 0 24 24" fill="none"><path d="M6 8h12M6 12h8M6 16h5" stroke="#1C1712" stroke-width="1.8" stroke-linecap="round"/><path d="M17 14l3 3-3 3" stroke="#1C1712" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <h3>第五章 · 上岗认证</h3>
+      <span class="sub">拖一拖 · 检验你是否真的记住了</span>
+      <span class="mod-icon"></span>
+    </button>
+    <div class="mod-body">
+      <div class="mod-body-inner">
+        <div>
+          <p>前面几章看完不代表记住了。把下面这 5 个步骤，按真实的接单流程拖拽排好顺序，排对了才能解锁"签署契约"。</p>
+          <p style="color:rgba(28,23,18,.55); font-size:13px;">别担心，排错了也没关系，系统会告诉你哪几个位置不对，改到全对为止。</p>
+        </div>
+        <div class="mod-panel sort-wrap">
+          <div class="panel-title">流程排序 · 拖动重新排列</div>
+          <div class="sort-hint"><svg viewBox="0 0 24 24" fill="none"><path d="M8 6h.01M8 12h.01M8 18h.01M16 6h.01M16 12h.01M16 18h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>长按左侧图标拖动排序</div>
+          <div class="sort-list" id="sortList">
+            <div class="sort-item" data-step="3"><span class="sort-handle"><svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="6" r="1.4" fill="currentColor"/><circle cx="8" cy="12" r="1.4" fill="currentColor"/><circle cx="8" cy="18" r="1.4" fill="currentColor"/><circle cx="15" cy="6" r="1.4" fill="currentColor"/><circle cx="15" cy="12" r="1.4" fill="currentColor"/><circle cx="15" cy="18" r="1.4" fill="currentColor"/></svg></span><span class="sort-num">·</span><span class="sort-text">出车：准时抵达，完成接送服务</span></div>
+            <div class="sort-item" data-step="1"><span class="sort-handle"><svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="6" r="1.4" fill="currentColor"/><circle cx="8" cy="12" r="1.4" fill="currentColor"/><circle cx="8" cy="18" r="1.4" fill="currentColor"/><circle cx="15" cy="6" r="1.4" fill="currentColor"/><circle cx="15" cy="12" r="1.4" fill="currentColor"/><circle cx="15" cy="18" r="1.4" fill="currentColor"/></svg></span><span class="sort-num">·</span><span class="sort-text">接单：收到系统推送的订单通知</span></div>
+            <div class="sort-item" data-step="5"><span class="sort-handle"><svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="6" r="1.4" fill="currentColor"/><circle cx="8" cy="12" r="1.4" fill="currentColor"/><circle cx="8" cy="18" r="1.4" fill="currentColor"/><circle cx="15" cy="6" r="1.4" fill="currentColor"/><circle cx="15" cy="12" r="1.4" fill="currentColor"/><circle cx="15" cy="18" r="1.4" fill="currentColor"/></svg></span><span class="sort-num">·</span><span class="sort-text">到账：在"我的收益"查看结算结果</span></div>
+            <div class="sort-item" data-step="2"><span class="sort-handle"><svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="6" r="1.4" fill="currentColor"/><circle cx="8" cy="12" r="1.4" fill="currentColor"/><circle cx="8" cy="18" r="1.4" fill="currentColor"/><circle cx="15" cy="6" r="1.4" fill="currentColor"/><circle cx="15" cy="12" r="1.4" fill="currentColor"/><circle cx="15" cy="18" r="1.4" fill="currentColor"/></svg></span><span class="sort-num">·</span><span class="sort-text">确认：查看行前规范与结算周期提示</span></div>
+            <div class="sort-item" data-step="4"><span class="sort-handle"><svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="6" r="1.4" fill="currentColor"/><circle cx="8" cy="12" r="1.4" fill="currentColor"/><circle cx="8" cy="18" r="1.4" fill="currentColor"/><circle cx="15" cy="6" r="1.4" fill="currentColor"/><circle cx="15" cy="12" r="1.4" fill="currentColor"/><circle cx="15" cy="18" r="1.4" fill="currentColor"/></svg></span><span class="sort-num">·</span><span class="sort-text">完成：订单结束，进入结算周期倒计时</span></div>
+          </div>
+          <div class="sort-check">
+            <button class="sort-check-btn" onclick="checkSortOrder()">检查我的排序</button>
+            <p class="sort-feedback" id="sortFeedback"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <section class="ceremony" id="ceremony">
@@ -585,7 +640,9 @@ const IDS = {
   badgeResultImg: 'badgeResultImg',
   saveHint: 'saveHint',
   saveHintText: 'saveHintText',
-  resultNote: 'resultNote'
+  resultNote: 'resultNote',
+  sortList: 'sortList',
+  sortFeedback: 'sortFeedback'
 };
 
 function pad2(n){ return String(n).padStart(2, '0'); }
@@ -629,6 +686,98 @@ function openMod(id){
   mod.scrollIntoView({behavior: 'smooth', block: 'start'});
 }
 
+window.sortVerified = false;
+
+(function(){
+  const list = document.getElementById(IDS.sortList);
+  if(!list) return;
+
+  let dragEl = null, pointerId = null;
+
+  function items(){ return Array.from(list.children); }
+
+  function onPointerDown(e){
+    const item = e.currentTarget.closest('.sort-item');
+    if(!item) return;
+    dragEl = item;
+    pointerId = e.pointerId;
+    try{ item.setPointerCapture(pointerId); }catch(err){}
+    item.classList.add('dragging');
+    e.preventDefault();
+  }
+
+  function onPointerMove(e){
+    if(!dragEl || e.pointerId !== pointerId) return;
+    const y = e.clientY;
+    const siblings = items().filter((el) => el !== dragEl);
+    for(const sib of siblings){
+      const box = sib.getBoundingClientRect();
+      const mid = box.top + box.height / 2;
+      if(y < mid && dragEl !== sib.previousElementSibling){
+        list.insertBefore(dragEl, sib);
+        break;
+      }else if(y >= mid && dragEl !== sib.nextElementSibling){
+        list.insertBefore(dragEl, sib.nextSibling);
+        break;
+      }
+    }
+  }
+
+  function onPointerUp(e){
+    if(!dragEl) return;
+    dragEl.classList.remove('dragging');
+    try{ dragEl.releasePointerCapture(pointerId); }catch(err){}
+    dragEl = null;
+    pointerId = null;
+    const feedback = document.getElementById(IDS.sortFeedback);
+    if(feedback){ feedback.textContent = ''; feedback.className = 'sort-feedback'; }
+    items().forEach((el) => el.classList.remove('correct', 'wrong'));
+  }
+
+  items().forEach((item) => {
+    const handle = item.querySelector('.sort-handle');
+    if(handle){
+      handle.addEventListener('pointerdown', onPointerDown, {passive: false});
+    }
+  });
+  list.addEventListener('pointermove', onPointerMove);
+  list.addEventListener('pointerup', onPointerUp);
+  list.addEventListener('pointercancel', onPointerUp);
+})();
+
+window.checkSortOrder = function(){
+  const list = document.getElementById(IDS.sortList);
+  const feedback = document.getElementById(IDS.sortFeedback);
+  if(!list || !feedback) return;
+
+  const correctOrder = ['1', '2', '3', '4', '5'];
+  const els = Array.from(list.children);
+  const currentOrder = els.map((el) => el.dataset.step);
+  const isCorrect = currentOrder.every((step, i) => step === correctOrder[i]);
+
+  els.forEach((el, i) => {
+    el.classList.remove('correct', 'wrong');
+    if(el.dataset.step === correctOrder[i]){
+      el.classList.add('correct');
+    }else{
+      el.classList.add('wrong');
+    }
+  });
+
+  if(isCorrect){
+    feedback.textContent = '✅ 全对！你已经记牢整个接单流程了，快去签署契约吧。';
+    feedback.className = 'sort-feedback success';
+    window.sortVerified = true;
+  }else{
+    feedback.textContent = '还差一点 —— 绿色的位置排对了，红色的再想想顺序。';
+    feedback.className = 'sort-feedback warn';
+    window.sortVerified = false;
+    list.classList.remove('shake');
+    void list.offsetWidth;
+    list.classList.add('shake');
+  }
+};
+
 (function(){
   const slider = document.getElementById(IDS.slider);
   const handle = document.getElementById(IDS.sliderHandle);
@@ -644,6 +793,7 @@ function openMod(id){
 
   let dragging = false;
   let done = false;
+  let pointerId = null;
   const handleW = 50, pad = 3;
 
   function setPos(x){
@@ -803,6 +953,18 @@ function openMod(id){
     if(done) return;
     const comm = document.getElementById(IDS.commCheck);
     const ack = document.getElementById(IDS.ackCheck);
+    if(!window.sortVerified){
+      slider.classList.remove('shake'); void slider.offsetWidth; slider.classList.add('shake');
+      const sortMod = document.getElementById('m5');
+      if(sortMod){
+        openMod('m5');
+        const sl = document.getElementById(IDS.sortList);
+        if(sl){ sl.classList.remove('shake'); void sl.offsetWidth; sl.classList.add('shake'); }
+      }
+      label.textContent = '请先完成上方"上岗认证"的流程排序 ↑';
+      setTimeout(() => { label.textContent = '向右滑动，确认遵守 →'; }, 2400);
+      return;
+    }
     if((comm && !comm.checked) || (ack && !ack.checked)){
       const targetId = (comm && !comm.checked) ? IDS.commAck : IDS.finalAck;
       const fa = document.getElementById(targetId);
@@ -813,29 +975,30 @@ function openMod(id){
       return;
     }
     dragging = true;
+    pointerId = e.pointerId;
+    try{ handle.setPointerCapture(pointerId); }catch(err){}
     handle.style.transition = 'none';
     fill.style.transition = 'none';
   }
   function pointerMove(e){
-    if(!dragging || done) return;
+    if(!dragging || done || e.pointerId !== pointerId) return;
     const rect = slider.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    setPos(clientX - rect.left - handleW / 2);
+    setPos(e.clientX - rect.left - handleW / 2);
   }
-  function pointerUp(){
+  function pointerUp(e){
     if(!dragging) return;
     dragging = false;
+    try{ handle.releasePointerCapture(pointerId); }catch(err){}
+    pointerId = null;
     handle.style.transition = 'left .25s ease';
     fill.style.transition = 'width .25s ease';
     if(!done){ setPos(0); }
   }
 
-  handle.addEventListener('mousedown', pointerDown);
-  handle.addEventListener('touchstart', pointerDown, {passive: true});
-  window.addEventListener('mousemove', pointerMove);
-  window.addEventListener('touchmove', pointerMove, {passive: true});
-  window.addEventListener('mouseup', pointerUp);
-  window.addEventListener('touchend', pointerUp);
+  handle.addEventListener('pointerdown', pointerDown, {passive: false});
+  window.addEventListener('pointermove', pointerMove);
+  window.addEventListener('pointerup', pointerUp);
+  window.addEventListener('pointercancel', pointerUp);
 })();
 </script>
 
