@@ -693,8 +693,51 @@ window.sortVerified = false;
   if(!list) return;
 
   let dragEl = null, pointerId = null;
+  let rafPending = false, pendingY = 0;
 
   function items(){ return Array.from(list.children); }
+
+  function recordRects(){
+    return items().map((el) => [el, el.getBoundingClientRect()]);
+  }
+
+  function playFlip(prevRects){
+    prevRects.forEach(([el, firstRect]) => {
+      if(el === dragEl) return;
+      const lastRect = el.getBoundingClientRect();
+      const dy = firstRect.top - lastRect.top;
+      if(Math.abs(dy) < 0.5) return;
+      el.style.transition = 'none';
+      el.style.transform = `translateY(${dy}px)`;
+      requestAnimationFrame(() => {
+        el.style.transition = 'transform .22s ease';
+        el.style.transform = '';
+      });
+    });
+  }
+
+  function maybeSwap(clientY){
+    if(!dragEl) return;
+    const prev = dragEl.previousElementSibling;
+    if(prev){
+      const box = prev.getBoundingClientRect();
+      if(clientY < box.top + box.height / 2){
+        const rects = recordRects();
+        list.insertBefore(dragEl, prev);
+        playFlip(rects);
+        return;
+      }
+    }
+    const next = dragEl.nextElementSibling;
+    if(next){
+      const box = next.getBoundingClientRect();
+      if(clientY > box.top + box.height / 2){
+        const rects = recordRects();
+        list.insertBefore(dragEl, next.nextSibling);
+        playFlip(rects);
+      }
+    }
+  }
 
   function onPointerDown(e){
     const item = e.currentTarget.closest('.sort-item');
@@ -708,19 +751,13 @@ window.sortVerified = false;
 
   function onPointerMove(e){
     if(!dragEl || e.pointerId !== pointerId) return;
-    const y = e.clientY;
-    const siblings = items().filter((el) => el !== dragEl);
-    for(const sib of siblings){
-      const box = sib.getBoundingClientRect();
-      const mid = box.top + box.height / 2;
-      if(y < mid && dragEl !== sib.previousElementSibling){
-        list.insertBefore(dragEl, sib);
-        break;
-      }else if(y >= mid && dragEl !== sib.nextElementSibling){
-        list.insertBefore(dragEl, sib.nextSibling);
-        break;
-      }
-    }
+    pendingY = e.clientY;
+    if(rafPending) return;
+    rafPending = true;
+    requestAnimationFrame(() => {
+      rafPending = false;
+      maybeSwap(pendingY);
+    });
   }
 
   function onPointerUp(e){
