@@ -560,52 +560,97 @@
 </footer>
 
 <script>
+// 统一维护所有用到的元素 ID，避免字符串散落各处、便于后期改动
+const IDS = {
+  slider: 'slider',
+  sliderHandle: 'sliderHandle',
+  sliderFill: 'sliderFill',
+  sliderLabel: 'sliderLabel',
+  signedState: 'signedState',
+  signTime: 'signTime',
+  particles: 'particles',
+  badgeMedal: 'badgeMedal',
+  ceremonyTitle: 'ceremonyTitle',
+  ceremonyDesc: 'ceremonyDesc',
+  claimForm: 'claimForm',
+  commCheck: 'commCheck',
+  ackCheck: 'ackCheck',
+  commAck: 'commAck',
+  finalAck: 'finalAck',
+  partnerName: 'partnerName',
+  genBtn: 'genBtn',
+  badgeImg: 'badgeImg',
+  badgeCanvas: 'badgeCanvas',
+  resultCard: 'resultCard',
+  badgeResultImg: 'badgeResultImg',
+  saveHint: 'saveHint',
+  saveHintText: 'saveHintText',
+  resultNote: 'resultNote'
+};
+
+function pad2(n){ return String(n).padStart(2, '0'); }
+
+function formatTimestamp(date, withSeconds){
+  const y = date.getFullYear();
+  const mo = pad2(date.getMonth() + 1);
+  const d = pad2(date.getDate());
+  const hh = pad2(date.getHours());
+  const mm = pad2(date.getMinutes());
+  return withSeconds ? `${y}-${mo}-${d} ${hh}:${mm}:${pad2(date.getSeconds())}` : `${y}-${mo}-${d} ${hh}:${mm}`;
+}
+
 function toggleMod(btn){
-  var mod = btn.parentElement;
-  var body = mod.querySelector('.mod-body');
-  var isOpen = mod.classList.contains('open');
-  document.querySelectorAll('.mod.open').forEach(function(m){
-    if(m!==mod){ m.classList.remove('open'); m.querySelector('.mod-body').style.maxHeight=null; }
+  const mod = btn.parentElement;
+  const body = mod.querySelector('.mod-body');
+  const isOpen = mod.classList.contains('open');
+  document.querySelectorAll('.mod.open').forEach((m) => {
+    if(m !== mod){ m.classList.remove('open'); m.querySelector('.mod-body').style.maxHeight = null; }
   });
   if(isOpen){
     mod.classList.remove('open');
     body.style.maxHeight = null;
   }else{
     mod.classList.add('open');
-    body.style.maxHeight = body.scrollHeight + 'px';
+    body.style.maxHeight = `${body.scrollHeight}px`;
   }
 }
 
 function openMod(id){
-  var mod = document.getElementById(id);
+  const mod = document.getElementById(id);
   if(!mod) return;
-  var body = mod.querySelector('.mod-body');
-  document.querySelectorAll('.mod.open').forEach(function(m){
-    if(m!==mod){ m.classList.remove('open'); m.querySelector('.mod-body').style.maxHeight=null; }
+  const body = mod.querySelector('.mod-body');
+  document.querySelectorAll('.mod.open').forEach((m) => {
+    if(m !== mod){ m.classList.remove('open'); m.querySelector('.mod-body').style.maxHeight = null; }
   });
   if(!mod.classList.contains('open')){
     mod.classList.add('open');
-    body.style.maxHeight = body.scrollHeight + 'px';
+    body.style.maxHeight = `${body.scrollHeight}px`;
   }
-  mod.scrollIntoView({behavior:'smooth', block:'start'});
+  mod.scrollIntoView({behavior: 'smooth', block: 'start'});
 }
 
 (function(){
-  var slider = document.getElementById('slider');
-  var handle = document.getElementById('sliderHandle');
-  var fill = document.getElementById('sliderFill');
-  var label = document.getElementById('sliderLabel');
-  var signedState = document.getElementById('signedState');
-  var signTime = document.getElementById('signTime');
-  var particles = document.getElementById('particles');
-  var dragging = false, done = false;
-  var handleW = 50, pad = 3;
+  const slider = document.getElementById(IDS.slider);
+  const handle = document.getElementById(IDS.sliderHandle);
+  const fill = document.getElementById(IDS.sliderFill);
+  const label = document.getElementById(IDS.sliderLabel);
+  const signedState = document.getElementById(IDS.signedState);
+  const signTime = document.getElementById(IDS.signTime);
+  const particles = document.getElementById(IDS.particles);
+  const claimForm = document.getElementById(IDS.claimForm);
+  const badgeMedal = document.getElementById(IDS.badgeMedal);
+  const ceremonyTitle = document.getElementById(IDS.ceremonyTitle);
+  const ceremonyDesc = document.getElementById(IDS.ceremonyDesc);
+
+  let dragging = false;
+  let done = false;
+  const handleW = 50, pad = 3;
 
   function setPos(x){
-    var max = slider.offsetWidth - handleW - pad*2;
+    const max = slider.offsetWidth - handleW - pad * 2;
     x = Math.max(0, Math.min(x, max));
-    handle.style.left = (x+pad) + 'px';
-    fill.style.width = (x + handleW + pad) + 'px';
+    handle.style.left = `${x + pad}px`;
+    fill.style.width = `${x + handleW + pad}px`;
     if(x >= max - 2 && !done){ complete(); }
   }
 
@@ -613,101 +658,93 @@ function openMod(id){
     done = true;
     slider.classList.add('done');
     label.textContent = '已确认';
-    var now = new Date();
-    var hh = String(now.getHours()).padStart(2,'0');
-    var mm = String(now.getMinutes()).padStart(2,'0');
-    var y = now.getFullYear(), mo = String(now.getMonth()+1).padStart(2,'0'), d = String(now.getDate()).padStart(2,'0');
-    signTime.textContent = 'SIGNED AT ' + y+'-'+mo+'-'+d+' '+hh+':'+mm;
+    signTime.textContent = `SIGNED AT ${formatTimestamp(new Date())}`;
     signedState.classList.add('show');
     burst();
 
-    var badge = document.getElementById('badgeMedal');
-    badge.classList.remove('locked');
-    badge.classList.add('unlocked');
-    document.getElementById('ceremonyTitle').textContent = '太棒了，勋章已解锁！';
-    document.getElementById('ceremonyDesc').textContent = '你已正式加入跑跑大家庭。输入你的快帮行伙伴账户名，生成属于你的专属勋章。';
+    badgeMedal.classList.remove('locked');
+    badgeMedal.classList.add('unlocked');
+    ceremonyTitle.textContent = '太棒了，勋章已解锁！';
+    ceremonyDesc.textContent = '你已正式加入跑跑大家庭。输入你的快帮行伙伴账户名，生成属于你的专属勋章。';
 
-    setTimeout(function(){
-      document.getElementById('claimForm').classList.add('show');
-      document.getElementById('claimForm').scrollIntoView({behavior:'smooth', block:'center'});
+    setTimeout(() => {
+      claimForm.classList.add('show');
+      claimForm.scrollIntoView({behavior: 'smooth', block: 'center'});
     }, 550);
   }
 
   window.generateBadge = function(){
-    var nameInput = document.getElementById('partnerName');
-    var name = nameInput.value.trim();
+    const nameInput = document.getElementById(IDS.partnerName);
+    const name = nameInput.value.trim();
     if(!name){
       nameInput.classList.remove('shake'); void nameInput.offsetWidth; nameInput.classList.add('shake');
       nameInput.focus();
       return;
     }
 
-    var genBtn = document.getElementById('genBtn');
+    const genBtn = document.getElementById(IDS.genBtn);
     if(genBtn){ genBtn.disabled = true; genBtn.textContent = '生成中…'; }
 
-    var img = document.getElementById('badgeImg');
-    var canvas = document.getElementById('badgeCanvas');
-    var ctx = canvas.getContext('2d');
-    var W = 1024, H = 660;
+    const img = document.getElementById(IDS.badgeImg);
+    const canvas = document.getElementById(IDS.badgeCanvas);
+    const ctx = canvas.getContext('2d');
+    const W = 1024, H = 660;
     canvas.width = W; canvas.height = H;
-    var finished = false;
+    let finished = false;
 
-    // 无论背景图是否能正常读取，都保证最终一定绘制出勋章并展示下载区
+    // 无论背景图是否能正常读取，都保证最终一定绘制出勋章并展示保存提示
     function draw(imgUsable){
       if(finished) return;
       finished = true;
       try{
         ctx.fillStyle = '#0A121B';
-        ctx.fillRect(0,0,W,H);
+        ctx.fillRect(0, 0, W, H);
 
         if(imgUsable){
           try{
-            var iw = img.naturalWidth || 1024, ih = img.naturalHeight || 559;
-            var scale = Math.min(W/iw, (H-110)/ih);
-            var dw = iw*scale, dh = ih*scale;
-            var dx = (W-dw)/2, dy = 20;
+            const iw = img.naturalWidth || 1024, ih = img.naturalHeight || 559;
+            const scale = Math.min(W / iw, (H - 110) / ih);
+            const dw = iw * scale, dh = ih * scale;
+            const dx = (W - dw) / 2, dy = 20;
             ctx.drawImage(img, dx, dy, dw, dh);
           }catch(e){ imgUsable = false; }
         }
 
         if(!imgUsable){
           // 图片没能画上去时，用渐变底色代替，保证勋章依然能生成
-          var grad = ctx.createLinearGradient(0,0,W,H-110);
-          grad.addColorStop(0,'#3a2a12');
-          grad.addColorStop(1,'#0A121B');
+          const grad = ctx.createLinearGradient(0, 0, W, H - 110);
+          grad.addColorStop(0, '#3a2a12');
+          grad.addColorStop(1, '#0A121B');
           ctx.fillStyle = grad;
-          ctx.fillRect(0,0,W,H-110);
+          ctx.fillRect(0, 0, W, H - 110);
         }
 
         ctx.fillStyle = 'rgba(200,154,72,0.14)';
-        ctx.fillRect(0, H-100, W, 100);
+        ctx.fillRect(0, H - 100, W, 100);
         ctx.strokeStyle = '#C89A48';
         ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(0,H-100); ctx.lineTo(W,H-100); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, H - 100); ctx.lineTo(W, H - 100); ctx.stroke();
 
         ctx.textAlign = 'center';
         ctx.fillStyle = '#F6EEDF';
         ctx.font = '600 32px "Microsoft YaHei", sans-serif';
-        ctx.fillText('跑跑认证司导 · ' + name, W/2, H-56);
+        ctx.fillText(`跑跑认证司导 · ${name}`, W / 2, H - 56);
 
-        var now = new Date();
-        function pad(n){ return String(n).padStart(2,'0'); }
-        var ts = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate())+' '+pad(now.getHours())+':'+pad(now.getMinutes());
         ctx.font = '400 16px monospace';
         ctx.fillStyle = 'rgba(246,238,223,0.55)';
-        ctx.fillText('CERTIFIED AT ' + ts, W/2, H-24);
+        ctx.fillText(`CERTIFIED AT ${formatTimestamp(new Date())}`, W / 2, H - 24);
       }catch(drawErr){
         // 极端情况下画布绘制本身出错，也不让整个流程静默失败
       }
 
-      var resultCard = document.getElementById('resultCard');
-      var resultImg = document.getElementById('badgeResultImg');
-      var saveHint = document.getElementById('saveHint');
-      var saveHintText = document.getElementById('saveHintText');
-      var note = document.getElementById('resultNote');
+      const resultCard = document.getElementById(IDS.resultCard);
+      const resultImg = document.getElementById(IDS.badgeResultImg);
+      const saveHint = document.getElementById(IDS.saveHint);
+      const saveHintText = document.getElementById(IDS.saveHintText);
+      const note = document.getElementById(IDS.resultNote);
 
       try{
-        var dataUrl = canvas.toDataURL('image/png');
+        const dataUrl = canvas.toDataURL('image/png');
         resultImg.src = dataUrl;
         resultImg.style.display = '';
         canvas.style.display = 'none';
@@ -730,49 +767,49 @@ function openMod(id){
       }
 
       resultCard.classList.add('show');
-      resultCard.scrollIntoView({behavior:'smooth', block:'center'});
+      resultCard.scrollIntoView({behavior: 'smooth', block: 'center'});
       if(genBtn){ genBtn.disabled = false; genBtn.textContent = '生成我的勋章'; }
     }
 
     if(img.complete && img.naturalWidth){
       draw(true);
     }else{
-      img.onload = function(){ draw(true); };
-      img.onerror = function(){ draw(false); };
+      img.onload = () => draw(true);
+      img.onerror = () => draw(false);
       // 兜底：如果图片既不触发onload也不触发onerror（极少数环境），2.5秒后强制继续
-      setTimeout(function(){ draw(!!img.naturalWidth); }, 2500);
+      setTimeout(() => draw(!!img.naturalWidth), 2500);
     }
   };
 
   function burst(){
-    for(var i=0;i<26;i++){
-      var p = document.createElement('div');
-      p.className = 'particle' + (i%3===0 ? ' gold':'');
-      var angle = Math.random()*Math.PI*2;
-      var dist = 60 + Math.random()*140;
-      var dx = Math.cos(angle)*dist, dy = Math.sin(angle)*dist - 40;
+    for(let i = 0; i < 26; i++){
+      const p = document.createElement('div');
+      p.className = `particle${i % 3 === 0 ? ' gold' : ''}`;
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 60 + Math.random() * 140;
+      const dx = Math.cos(angle) * dist, dy = Math.sin(angle) * dist - 40;
       p.style.transform = 'translate(-50%,-50%)';
       particles.appendChild(p);
       p.animate([
-        { transform:'translate(-50%,-50%) translate(0,0) rotate(0deg)', opacity:0 },
-        { offset:0.15, opacity:1 },
-        { transform:'translate(-50%,-50%) translate('+dx+'px,'+dy+'px) rotate('+(Math.random()*360)+'deg)', opacity:0 }
-      ], { duration: 900 + Math.random()*500, easing:'cubic-bezier(.2,.6,.3,1)' });
-      (function(el){ setTimeout(function(){ el.remove(); }, 1500); })(p);
+        { transform: 'translate(-50%,-50%) translate(0,0) rotate(0deg)', opacity: 0 },
+        { offset: 0.15, opacity: 1 },
+        { transform: `translate(-50%,-50%) translate(${dx}px,${dy}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+      ], { duration: 900 + Math.random() * 500, easing: 'cubic-bezier(.2,.6,.3,1)' });
+      setTimeout(() => p.remove(), 1500);
     }
   }
 
   function pointerDown(e){
     if(done) return;
-    var comm = document.getElementById('commCheck');
-    var ack = document.getElementById('ackCheck');
+    const comm = document.getElementById(IDS.commCheck);
+    const ack = document.getElementById(IDS.ackCheck);
     if((comm && !comm.checked) || (ack && !ack.checked)){
-      var targetId = (comm && !comm.checked) ? 'commAck' : 'finalAck';
-      var fa = document.getElementById(targetId);
+      const targetId = (comm && !comm.checked) ? IDS.commAck : IDS.finalAck;
+      const fa = document.getElementById(targetId);
       fa.classList.remove('shake'); void fa.offsetWidth; fa.classList.add('shake');
       slider.classList.remove('shake'); void slider.offsetWidth; slider.classList.add('shake');
       label.textContent = (comm && !comm.checked) ? '请先勾选上方的沟通与争议处理确认' : '请先勾选上方的结算周期确认';
-      setTimeout(function(){ label.textContent = '向右滑动，确认遵守 →'; }, 2200);
+      setTimeout(() => { label.textContent = '向右滑动，确认遵守 →'; }, 2200);
       return;
     }
     dragging = true;
@@ -781,9 +818,9 @@ function openMod(id){
   }
   function pointerMove(e){
     if(!dragging || done) return;
-    var rect = slider.getBoundingClientRect();
-    var clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    setPos(clientX - rect.left - handleW/2);
+    const rect = slider.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    setPos(clientX - rect.left - handleW / 2);
   }
   function pointerUp(){
     if(!dragging) return;
@@ -794,9 +831,9 @@ function openMod(id){
   }
 
   handle.addEventListener('mousedown', pointerDown);
-  handle.addEventListener('touchstart', pointerDown, {passive:true});
+  handle.addEventListener('touchstart', pointerDown, {passive: true});
   window.addEventListener('mousemove', pointerMove);
-  window.addEventListener('touchmove', pointerMove, {passive:true});
+  window.addEventListener('touchmove', pointerMove, {passive: true});
   window.addEventListener('mouseup', pointerUp);
   window.addEventListener('touchend', pointerUp);
 })();
