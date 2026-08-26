@@ -151,6 +151,15 @@
   .rung.l3 .lv{background:var(--gold);}
   .rung .desc{font-size:13px; line-height:1.6; color:rgba(28,23,18,.72);}
   .rung .desc b{color:var(--ink);}
+  .rung .desc .bi-en{display:block; font-family:'JetBrains Mono',monospace; font-size:11px; color:rgba(28,23,18,.42); margin-top:3px; font-style:italic;}
+  .rung-links{margin-top:6px; display:flex; flex-wrap:wrap; align-items:center; gap:6px; font-size:11.5px;}
+  .rung-links .rl-label{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--gold); letter-spacing:.04em;}
+  .rung-links a{color:var(--rust); text-decoration:none; border-bottom:1px dashed var(--rust); font-weight:500;}
+  .rung-links a:hover{color:var(--orange-dim); border-bottom-color:var(--orange-dim);}
+  .bi-block p .bi-en, .bi-block .bi-en{display:block; font-size:12.5px; font-family:'JetBrains Mono',monospace; color:rgba(28,23,18,.42); margin-top:4px; font-style:italic; line-height:1.6;}
+  h3 .bi-en, .panel-title .bi-en{display:block; font-family:'JetBrains Mono',monospace; font-weight:400; letter-spacing:0; font-style:italic; color:rgba(28,23,18,.4); margin-top:2px;}
+  .mod-head h3 .bi-en{color:rgba(28,23,18,.38); font-size:12.5px;}
+  .mod-panel .panel-title .bi-en{color:rgba(28,23,18,.35); font-size:10px; letter-spacing:.06em; text-transform:none;}
 
   /* ---------- 必读：结算周期总览 ---------- */
   .mustread{grid-column:1 / -1; margin-top:8px; background:var(--off-white); border:1px solid var(--line); border-radius:8px; padding:28px 26px 26px;}
@@ -483,22 +492,60 @@
   <div class="mod" id="m4">
     <button class="mod-head" onclick="toggleMod(this)">
       <span class="mod-ico"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20V10M11 20V4M18 20v-7" stroke="#1C1712" stroke-width="1.8" stroke-linecap="round"/></svg></span>
-      <h3>第四章 · 成长收益</h3>
-      <span class="sub">成长路径 · 你值得更好的回报</span>
+      <h3>第四章 · 成长收益<span class="bi-en">Chapter 4 · Growth &amp; Earnings</span></h3>
+      <span class="sub">成长路径 · 你值得更好的回报<span class="bi-en" style="display:inline;margin:0;">Your Growth Path · You Deserve Better Rewards</span></span>
       <span class="mod-icon"></span>
     </button>
     <div class="mod-body">
       <div class="mod-body-inner">
-        <div class="draft-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>草稿 · 内容待补充，会陆续更新</div>
-        <div>
-          <p>你的每一份用心，平台都看得见。</p>
+        <div class="draft-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>草稿 · 内容待补充，会陆续更新 / Draft · More content coming soon</div>
+        <div class="bi-block">
+          <p>你的每一份用心，平台都看得见。<span class="bi-en">Every bit of effort you put in — the platform sees it.</span></p>
         </div>
         <div class="mod-panel">
-          <div class="panel-title">三级成长阶梯</div>
+          <div class="panel-title">三级成长阶梯<span class="bi-en">Three-Tier Growth Ladder</span></div>
           <div class="ladder">
-            <div class="rung l1"><span class="lv">L1</span><div class="desc"><b>准入司导</b> — 完成本手册阅读并签署《行动契约》。</div></div>
-            <div class="rung l2"><span class="lv">L2</span><div class="desc"><b>精英司导</b> — 保持高好评（>98%），30 单无投诉，服务稳健。</div></div>
-            <div class="rung l3"><span class="lv">L3</span><div class="desc"><b>跑跑教练</b> — 不仅能高效接单，还能获得平台带教扶持与额外收益。</div></div>
+            <div class="rung l1">
+              <span class="lv">L1</span>
+              <div class="desc">
+                <b>准入司导</b> — 完成本手册阅读并签署《行动契约》。
+                <span class="bi-en">Certified Driver — Finish reading this handbook and sign the Code of Conduct.</span>
+                <div class="rung-links">
+                  <span class="rl-label">推荐学习 / Start here</span>
+                  <a href="#m1" onclick="openMod('m1');return false;">高效沟通 Communication</a>
+                  <span aria-hidden="true">·</span>
+                  <a href="#m3" onclick="openMod('m3');return false;">公正裁决 Dispute Rules</a>
+                  <span aria-hidden="true">·</span>
+                  <a href="#m5" onclick="openMod('m5');return false;">上岗认证 Certification</a>
+                </div>
+              </div>
+            </div>
+            <div class="rung l2">
+              <span class="lv">L2</span>
+              <div class="desc">
+                <b>精英司导</b> — 保持高好评（>98%），30 单无投诉，服务稳健。
+                <span class="bi-en">Elite Driver — Maintain a rating above 98%, 30 trips with zero complaints, and steady service quality.</span>
+                <div class="rung-links">
+                  <span class="rl-label">推荐学习 / Level up with</span>
+                  <a href="#m2" onclick="openMod('m2');return false;">结算必读 Payouts Guide</a>
+                  <span aria-hidden="true">·</span>
+                  <a href="#m3" onclick="openMod('m3');return false;">公正裁决 Dispute Rules</a>
+                </div>
+              </div>
+            </div>
+            <div class="rung l3">
+              <span class="lv">L3</span>
+              <div class="desc">
+                <b>跑跑教练</b> — 不仅能高效接单，还能获得平台带教扶持与额外收益。
+                <span class="bi-en">Paopao Coach — Beyond efficient trip-taking, gain platform mentoring support and extra earnings.</span>
+                <div class="rung-links">
+                  <span class="rl-label">推荐学习 / Deepen your edge</span>
+                  <a href="#m2" onclick="openMod('m2');return false;">结算必读 Payouts Guide</a>
+                  <span aria-hidden="true">·</span>
+                  <a href="#m1" onclick="openMod('m1');return false;">高效沟通 Communication</a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
